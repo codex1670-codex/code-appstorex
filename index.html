@@ -1,0 +1,756 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Orbit Launcher</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#05070d;
+  --bg2:#0a0f1e;
+  --aurora1:#7dd3fc;
+  --aurora2:#a78bfa;
+  --aurora3:#34d399;
+  --text:#eef2ff;
+  --muted:#8b93b0;
+  --card:rgba(255,255,255,0.045);
+  --card-hi:rgba(255,255,255,0.09);
+  --border:rgba(255,255,255,0.09);
+  --danger:#f87171;
+  --radius:18px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;}
+body{
+  background:
+    radial-gradient(ellipse 900px 500px at 15% -10%, rgba(125,211,252,0.16), transparent 60%),
+    radial-gradient(ellipse 700px 500px at 110% 10%, rgba(167,139,250,0.14), transparent 60%),
+    radial-gradient(ellipse 800px 600px at 50% 120%, rgba(52,211,153,0.08), transparent 60%),
+    var(--bg);
+  color:var(--text);
+  font-family:'Inter',sans-serif;
+  min-height:100vh;
+  overflow-x:hidden;
+  position:relative;
+}
+.display{font-family:'Space Grotesk',sans-serif;}
+#app{min-height:100vh;display:flex;flex-direction:column;}
+.center-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;}
+.stars{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.5;}
+.stars span{position:absolute;width:2px;height:2px;background:#fff;border-radius:50%;opacity:0.6;animation:twinkle 4s ease-in-out infinite;}
+@keyframes twinkle{0%,100%{opacity:0.15;}50%{opacity:0.8;}}
+ 
+/* ---------- Card shell ---------- */
+.panel{
+  width:100%;max-width:420px;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:24px;
+  padding:36px 32px;
+  backdrop-filter:blur(20px);
+  box-shadow:0 30px 80px -20px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.06);
+  position:relative;
+  z-index:1;
+  animation:rise .5s cubic-bezier(.2,.8,.2,1);
+}
+@keyframes rise{from{opacity:0;transform:translateY(18px) scale(.98);}to{opacity:1;transform:translateY(0) scale(1);}}
+ 
+.eyebrow{
+  font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--aurora1);
+  font-weight:600;margin-bottom:10px;display:flex;align-items:center;gap:8px;
+}
+.eyebrow::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--aurora1);box-shadow:0 0 10px var(--aurora1);}
+h1.title{font-size:26px;font-weight:700;margin-bottom:6px;letter-spacing:-0.01em;}
+p.sub{color:var(--muted);font-size:14px;line-height:1.5;margin-bottom:26px;}
+ 
+label{display:block;font-size:12px;color:var(--muted);margin:16px 0 6px;font-weight:600;letter-spacing:.02em;}
+input[type=text],input[type=password]{
+  width:100%;padding:13px 14px;border-radius:12px;border:1px solid var(--border);
+  background:rgba(255,255,255,0.03);color:var(--text);font-size:15px;font-family:'Inter',sans-serif;
+  outline:none;transition:border-color .2s, background .2s;
+}
+input::placeholder{color:#5a6178;}
+input:focus{border-color:var(--aurora1);background:rgba(125,211,252,0.06);}
+ 
+.btn{
+  width:100%;padding:14px 18px;border-radius:12px;border:none;cursor:pointer;
+  font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:15px;letter-spacing:.01em;
+  transition:transform .15s ease, box-shadow .2s ease, opacity .2s;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.btn:active{transform:scale(.98);}
+.btn-primary{
+  background:linear-gradient(135deg, var(--aurora1), var(--aurora2));
+  color:#05070d;
+  box-shadow:0 10px 30px -8px rgba(125,211,252,0.5);
+}
+.btn-primary:hover{box-shadow:0 14px 36px -6px rgba(125,211,252,0.65);}
+.btn-primary:disabled{opacity:.35;box-shadow:none;cursor:not-allowed;}
+.btn-ghost{
+  background:transparent;border:1px solid var(--border);color:var(--text);
+}
+.btn-ghost:hover{background:rgba(255,255,255,0.05);}
+.error-msg{
+  margin-top:14px;padding:10px 12px;border-radius:10px;background:rgba(248,113,113,0.1);
+  border:1px solid rgba(248,113,113,0.3);color:#fca5a5;font-size:13px;display:none;
+}
+.error-msg.show{display:block;animation:shake .35s;}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.hint{font-size:12px;color:var(--muted);margin-top:14px;text-align:center;line-height:1.5;}
+.hint b{color:var(--aurora3);}
+.switch-link{color:var(--aurora1);cursor:pointer;text-decoration:underline;text-underline-offset:2px;}
+.divider{display:flex;align-items:center;gap:12px;margin:22px 0;color:var(--muted);font-size:12px;}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border);}
+ 
+.status-line{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);margin-top:12px;min-height:18px;}
+.spinner{width:14px;height:14px;border-radius:50%;border:2px solid var(--border);border-top-color:var(--aurora1);animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.gh-ok{color:var(--aurora3);}
+ 
+/* ---------- Select screen ---------- */
+.select-wrap{width:100%;max-width:900px;margin:0 auto;padding:32px 20px 120px;position:relative;z-index:1;}
+.select-head{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:26px;}
+.select-head h1{font-size:28px;font-weight:700;}
+.counter{
+  font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;
+  padding:8px 16px;border-radius:999px;border:1px solid var(--border);background:var(--card);
+}
+.counter.full{color:var(--aurora3);border-color:rgba(52,211,153,.4);}
+.cat-label{
+  font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
+  margin:26px 0 12px;font-weight:600;display:flex;align-items:center;gap:10px;
+}
+.cat-label::after{content:'';flex:1;height:1px;background:var(--border);}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;}
+.app-card{
+  background:var(--card);border:1px solid var(--border);border-radius:16px;padding:14px;
+  cursor:pointer;transition:transform .15s ease, border-color .2s, background .2s;
+  display:flex;flex-direction:column;gap:10px;position:relative;
+}
+.app-card:hover{transform:translateY(-3px);background:var(--card-hi);}
+.app-card.picked{border-color:var(--aurora1);background:rgba(125,211,252,0.08);}
+.app-card.disabled{opacity:.35;cursor:not-allowed;}
+.app-logo{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:17px;color:#0a0f1e;box-shadow:0 6px 16px -4px rgba(0,0,0,.5);}
+.app-name{font-size:13.5px;font-weight:600;}
+.app-cat{font-size:10.5px;color:var(--muted);}
+.pick-badge{
+  position:absolute;top:10px;right:10px;width:20px;height:20px;border-radius:50%;
+  border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:11px;
+  background:rgba(0,0,0,.3);
+}
+.app-card.picked .pick-badge{background:var(--aurora1);border-color:var(--aurora1);color:#05070d;font-weight:700;}
+ 
+.dock{
+  position:fixed;bottom:0;left:0;right:0;padding:18px 20px calc(18px + env(safe-area-inset-bottom));
+  background:linear-gradient(to top, rgba(5,7,13,0.97), rgba(5,7,13,0.85) 70%, transparent);
+  z-index:5;display:flex;justify-content:center;
+}
+.dock-inner{width:100%;max-width:420px;}
+ 
+/* ---------- Generated / share screen ---------- */
+.code-box{
+  font-family:'Space Grotesk',sans-serif;font-size:38px;font-weight:700;letter-spacing:.14em;
+  text-align:center;padding:22px;border-radius:16px;
+  background:linear-gradient(135deg, rgba(125,211,252,.12), rgba(167,139,250,.12));
+  border:1px solid rgba(125,211,252,.35);margin:18px 0;color:var(--aurora1);
+  text-shadow:0 0 24px rgba(125,211,252,.5);
+}
+.step-list{list-style:none;margin:18px 0;display:flex;flex-direction:column;gap:10px;}
+.step-list li{display:flex;gap:10px;font-size:13.5px;color:var(--muted);line-height:1.5;}
+.step-num{
+  flex-shrink:0;width:20px;height:20px;border-radius:50%;background:var(--card);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--text);font-weight:600;
+}
+ 
+/* ================= HOME / CAROUSEL ================= */
+.home{min-height:100vh;position:relative;overflow:hidden;display:flex;flex-direction:column;z-index:1;transition:background 1s;}
+.home-top{display:flex;align-items:center;justify-content:space-between;padding:20px 22px;position:relative;z-index:20;}
+.home-brand{display:flex;align-items:center;gap:10px;}
+.home-brand .dot{width:9px;height:9px;border-radius:50%;background:var(--aurora1);box-shadow:0 0 12px var(--aurora1);}
+.home-brand span{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:15px;letter-spacing:.02em;}
+.icon-btn{
+  width:38px;height:38px;border-radius:11px;border:1px solid var(--border);background:var(--card);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text);
+}
+.theme-strip{display:flex;gap:8px;overflow-x:auto;padding:0 22px 16px;position:relative;z-index:20;scrollbar-width:none;}
+.theme-strip::-webkit-scrollbar{display:none;}
+.theme-chip{
+  flex-shrink:0;padding:8px 14px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap;
+  border:1px solid var(--border);background:var(--card);color:var(--muted);cursor:pointer;transition:all .2s;
+  font-family:'Space Grotesk',sans-serif;
+}
+.theme-chip.active{color:#05070d;border-color:transparent;}
+ 
+.stage{flex:1;position:relative;perspective:1400px;perspective-origin:50% 50%;display:flex;align-items:center;justify-content:center;touch-action:pan-y;}
+.stage-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;}
+.app-tile{
+  position:absolute;top:50%;left:50%;width:118px;height:118px;
+  transform-style:preserve-3d;cursor:pointer;
+  transition:transform .55s cubic-bezier(.22,.9,.3,1), opacity .55s, filter .55s;
+  display:flex;align-items:center;justify-content:center;
+}
+.app-tile .tile-face{
+  width:100%;height:100%;border-radius:28px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+  box-shadow:0 20px 50px -12px rgba(0,0,0,.7), inset 0 1px 0 rgba(255,255,255,.15);
+  border:1px solid rgba(255,255,255,.12);
+}
+.app-tile .glyph{
+  width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;
+  font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:22px;color:rgba(0,0,0,.75);
+  box-shadow:inset 0 1px 3px rgba(255,255,255,.4), 0 4px 10px rgba(0,0,0,.35);
+}
+.app-tile .tname{font-size:10.5px;color:#fff;font-weight:600;text-shadow:0 2px 6px rgba(0,0,0,.6);letter-spacing:.01em;}
+.app-tile.active .tile-face{box-shadow:0 30px 70px -10px rgba(0,0,0,.8), 0 0 0 2px var(--aurora1), 0 0 40px -4px var(--aurora1);}
+ 
+.hud-bottom{position:relative;z-index:20;padding:14px 22px calc(20px + env(safe-area-inset-bottom));text-align:center;}
+.hud-name{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:15px;margin-bottom:2px;}
+.hud-sub{font-size:11.5px;color:var(--muted);}
+.progress-dots{display:flex;gap:5px;justify-content:center;margin-top:12px;}
+.progress-dots span{width:5px;height:5px;border-radius:50%;background:var(--border);transition:all .3s;}
+.progress-dots span.on{background:var(--aurora1);width:16px;border-radius:3px;}
+ 
+.toast{
+  position:fixed;bottom:110px;left:50%;transform:translateX(-50%) translateY(10px);
+  background:rgba(20,22,32,.95);border:1px solid var(--border);padding:12px 18px;border-radius:12px;
+  font-size:13px;z-index:100;opacity:0;pointer-events:none;transition:all .3s;backdrop-filter:blur(10px);
+  display:flex;align-items:center;gap:10px;white-space:nowrap;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+ 
+.back-mini{position:absolute;top:20px;left:20px;font-size:12px;color:var(--muted);cursor:pointer;z-index:20;display:flex;align-items:center;gap:6px;}
+ 
+@media(max-width:480px){
+  .panel{padding:28px 22px;border-radius:20px;}
+  .app-tile{width:96px;height:96px;}
+  .app-tile .glyph{width:46px;height:46px;font-size:18px;}
+}
+</style>
+</head>
+<body>
+<div class="stars" id="stars"></div>
+<div id="app"></div>
+ 
+<script>
+/* ============ APP CATALOG ============ */
+const APPS = [
+  {id:'chatgpt', name:'ChatGPT', cat:'Artificial Intelligence', letter:'G', c1:'#10a37f', c2:'#1a7f64', scheme:'chatgpt://', web:'https://chatgpt.com'},
+  {id:'gemini', name:'Google Gemini', cat:'Artificial Intelligence', letter:'G', c1:'#4285f4', c2:'#9b72cb', scheme:'gemini://', web:'https://gemini.google.com'},
+  {id:'instagram', name:'Instagram', cat:'Social & Communication', letter:'I', c1:'#f58529', c2:'#dd2a7b', scheme:'instagram://app', web:'https://instagram.com'},
+  {id:'whatsapp', name:'WhatsApp', cat:'Social & Communication', letter:'W', c1:'#25d366', c2:'#128c7e', scheme:'whatsapp://send', web:'https://web.whatsapp.com'},
+  {id:'whatsapp_biz', name:'WhatsApp Business', cat:'Social & Communication', letter:'B', c1:'#25d366', c2:'#075e54', scheme:'whatsapp://send', web:'https://web.whatsapp.com'},
+  {id:'x', name:'X', cat:'Social & Communication', letter:'X', c1:'#e5e5e5', c2:'#8f8f8f', scheme:'twitter://', web:'https://x.com'},
+  {id:'discord', name:'Discord', cat:'Social & Communication', letter:'D', c1:'#5865f2', c2:'#404eed', scheme:'discord://', web:'https://discord.com/app'},
+  {id:'telegram', name:'Telegram', cat:'Social & Communication', letter:'T', c1:'#2aabee', c2:'#229ed9', scheme:'tg://', web:'https://web.telegram.org'},
+  {id:'snapchat', name:'Snapchat', cat:'Social & Communication', letter:'S', c1:'#fffc00', c2:'#e6e300', scheme:'snapchat://', web:'https://snapchat.com'},
+  {id:'threads', name:'Threads', cat:'Social & Communication', letter:'@', c1:'#f2f2f2', c2:'#a6a6a6', scheme:'barcelona://', web:'https://threads.net'},
+  {id:'spotify', name:'Spotify', cat:'Streaming & Entertainment', letter:'S', c1:'#1db954', c2:'#169c46', scheme:'spotify://', web:'https://open.spotify.com'},
+  {id:'youtube', name:'YouTube', cat:'Streaming & Entertainment', letter:'Y', c1:'#ff0000', c2:'#cc0000', scheme:'youtube://', web:'https://youtube.com'},
+  {id:'crunchyroll', name:'Crunchyroll', cat:'Streaming & Entertainment', letter:'C', c1:'#f47521', c2:'#e0680f', scheme:'crunchyroll://', web:'https://crunchyroll.com'},
+  {id:'netflix', name:'Netflix', cat:'Streaming & Entertainment', letter:'N', c1:'#e50914', c2:'#b0060f', scheme:'nflx://', web:'https://netflix.com'},
+  {id:'tiktok', name:'TikTok', cat:'Streaming & Entertainment', letter:'T', c1:'#25f4ee', c2:'#fe2c55', scheme:'tiktok://', web:'https://tiktok.com'},
+  {id:'duolingo', name:'Duolingo', cat:'Lifestyle & Utility', letter:'D', c1:'#58cc02', c2:'#3fa302', scheme:'duolingo://', web:'https://duolingo.com'},
+  {id:'zoom', name:'Zoom Workplace', cat:'Lifestyle & Utility', letter:'Z', c1:'#2d8cff', c2:'#0b5cd6', scheme:'zoomus://', web:'https://zoom.us'},
+  {id:'amazon', name:'Amazon', cat:'Lifestyle & Utility', letter:'a', c1:'#ff9900', c2:'#e88a00', scheme:'com.amazon.mobile.shopping://', web:'https://amazon.com'},
+  {id:'linkedin', name:'LinkedIn', cat:'Lifestyle & Utility', letter:'in', c1:'#0a66c2', c2:'#004182', scheme:'linkedin://', web:'https://linkedin.com'},
+  {id:'pinterest', name:'Pinterest', cat:'Lifestyle & Utility', letter:'P', c1:'#e60023', c2:'#ad081b', scheme:'pinterest://', web:'https://pinterest.com'},
+];
+const CATS = [...new Set(APPS.map(a=>a.cat))];
+ 
+const THEMES = {
+  aurora:  {label:'Aurora Orbit',    a1:'#7dd3fc', a2:'#a78bfa', bg:'radial-gradient(ellipse 900px 600px at 50% 30%, rgba(125,211,252,.16), transparent 60%), radial-gradient(ellipse 800px 600px at 50% 110%, rgba(167,139,250,.14), transparent 60%), #05070d'},
+  coverflow:{label:'Neon Coverflow', a1:'#ff2fd6', a2:'#22e0ff', bg:'radial-gradient(ellipse 900px 500px at 20% 0%, rgba(255,47,214,.15), transparent 60%), radial-gradient(ellipse 900px 500px at 80% 100%, rgba(34,224,255,.15), transparent 60%), #06040c'},
+  cascade: {label:'Slate Cascade',   a1:'#94a3b8', a2:'#64748b', bg:'linear-gradient(180deg, #0b1120, #060910)'},
+  cube:    {label:'Obsidian Cube',   a1:'#e9c46a', a2:'#8a6d1f', bg:'radial-gradient(circle at 50% 40%, #14120c, #05050a 75%)'},
+  fan:     {label:'Sunset Fan',      a1:'#fb923c', a2:'#f472b6', bg:'radial-gradient(ellipse 900px 700px at 50% 120%, rgba(251,146,60,.25), transparent 60%), radial-gradient(ellipse 700px 500px at 20% -10%, rgba(244,114,182,.18), transparent 60%), #0a0710'},
+};
+ 
+/* ============ STATE ============ */
+let state = {
+  screen:'login',        // login | join | setup | select | generated | home
+  user:{name:'', token:'', ghUser:null, ghAvatar:null},
+  selected:[],            // array of app ids, max 10
+  sessionCode:null,
+  joinCode:'',
+  loginErr:'', joinErr:'',
+  theme:'aurora',
+  activeIndex:0,
+  ghChecking:false,
+};
+ 
+const root = document.getElementById('app');
+ 
+/* ============ STORAGE HELPERS ============ */
+async function saveSession(code, payload){
+  try{ await window.storage.set('session:'+code, JSON.stringify(payload), true); return true; }
+  catch(e){ console.error(e); return false; }
+}
+async function loadSession(code){
+  try{
+    const res = await window.storage.get('session:'+code, true);
+    if(!res) return null;
+    return JSON.parse(res.value);
+  }catch(e){ return null; }
+}
+function genCode(){
+  const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let s='';
+  for(let i=0;i<6;i++) s+=chars[Math.floor(Math.random()*chars.length)];
+  return s;
+}
+ 
+/* ============ STARFIELD ============ */
+function initStars(){
+  const box = document.getElementById('stars');
+  let html='';
+  for(let i=0;i<60;i++){
+    const x=Math.random()*100, y=Math.random()*100, d=(Math.random()*3+2).toFixed(1), delay=(Math.random()*4).toFixed(1);
+    html+=`<span style="left:${x}%;top:${y}%;animation-duration:${d}s;animation-delay:${delay}s;"></span>`;
+  }
+  box.innerHTML = html;
+}
+ 
+/* ============ RENDER DISPATCH ============ */
+function render(){
+  if(state.screen==='login') return renderLogin();
+  if(state.screen==='join') return renderJoin();
+  if(state.screen==='setup') return renderSetup();
+  if(state.screen==='select') return renderSelect();
+  if(state.screen==='generated') return renderGenerated();
+  if(state.screen==='home') return renderHome();
+}
+ 
+/* ============ LOGIN ============ */
+function renderLogin(){
+  root.innerHTML = `
+  <div class="center-screen">
+    <div class="panel">
+      <div class="eyebrow">Orbit Launcher</div>
+      <h1 class="title display">Sign in</h1>
+      <p class="sub">Enter your access credentials to build a custom 3D app orbit.</p>
+      <label for="lg-user">Username</label>
+      <input type="text" id="lg-user" placeholder="code-x" autocomplete="off">
+      <label for="lg-pass">Password</label>
+      <input type="password" id="lg-pass" placeholder="••••">
+      <div class="error-msg ${state.loginErr?'show':''}" id="lg-err">${state.loginErr||''}</div>
+      <div style="margin-top:22px;">
+        <button class="btn btn-primary" id="lg-submit">Enter Orbit →</button>
+      </div>
+      <p class="hint">Have a share code from someone else's link? <span class="switch-link" id="go-join">Join their session</span></p>
+    </div>
+  </div>`;
+  document.getElementById('lg-submit').onclick = doLogin;
+  document.getElementById('lg-pass').addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
+  document.getElementById('go-join').onclick = ()=>{ state.screen='join'; render(); };
+}
+function doLogin(){
+  const u = document.getElementById('lg-user').value.trim();
+  const p = document.getElementById('lg-pass').value.trim();
+  if(u==='code-x' && p==='1234'){
+    state.loginErr='';
+    state.screen='setup';
+    render();
+  }else{
+    state.loginErr='Incorrect username or password.';
+    render();
+  }
+}
+ 
+/* ============ JOIN (load a shared session code on this device) ============ */
+function renderJoin(){
+  root.innerHTML = `
+  <div class="center-screen">
+    <div class="panel">
+      <div class="eyebrow">Join Session</div>
+      <h1 class="title display">Enter share code</h1>
+      <p class="sub">Type the 6-character code shown on the device that generated the orbit.</p>
+      <label for="jn-code">Share code</label>
+      <input type="text" id="jn-code" placeholder="e.g. K4T9XQ" style="text-transform:uppercase;letter-spacing:.12em;font-family:'Space Grotesk',sans-serif;">
+      <div class="error-msg ${state.joinErr?'show':''}" id="jn-err">${state.joinErr||''}</div>
+      <div style="margin-top:22px;display:flex;flex-direction:column;gap:10px;">
+        <button class="btn btn-primary" id="jn-submit">Load Orbit →</button>
+        <button class="btn btn-ghost" id="jn-back">Back to sign in</button>
+      </div>
+    </div>
+  </div>`;
+  document.getElementById('jn-submit').onclick = doJoin;
+  document.getElementById('jn-back').onclick = ()=>{ state.screen='login'; render(); };
+}
+async function doJoin(){
+  const code = document.getElementById('jn-code').value.trim().toUpperCase();
+  if(!code){ state.joinErr='Enter a code first.'; render(); return; }
+  const btn = document.getElementById('jn-submit');
+  btn.textContent='Loading...'; btn.disabled=true;
+  const data = await loadSession(code);
+  if(!data){
+    state.joinErr='No orbit found for that code. Check it and try again.';
+    render();
+    return;
+  }
+  state.user.name = data.name || 'Guest';
+  state.selected = data.apps || [];
+  state.sessionCode = code;
+  state.joinErr='';
+  state.screen='home';
+  render();
+}
+ 
+/* ============ SETUP (name + github token) ============ */
+function renderSetup(){
+  root.innerHTML = `
+  <div class="center-screen">
+    <div class="panel">
+      <div class="eyebrow">Step 1 of 2</div>
+      <h1 class="title display">Set up your profile</h1>
+      <p class="sub">Your name personalizes the orbit. Your GitHub token is used only to verify your identity in this browser session — it's never sent anywhere except GitHub's own API, and isn't stored after you close this tab.</p>
+      <label for="su-name">Your name</label>
+      <input type="text" id="su-name" placeholder="e.g. Arjun" value="${state.user.name||''}">
+      <label for="su-token">GitHub personal access token <span style="color:var(--muted);font-weight:400;">(optional)</span></label>
+      <input type="password" id="su-token" placeholder="ghp_..." value="${state.user.token||''}">
+      <div class="status-line" id="su-status"></div>
+      <div style="margin-top:22px;">
+        <button class="btn btn-primary" id="su-submit">Continue →</button>
+      </div>
+    </div>
+  </div>`;
+  document.getElementById('su-submit').onclick = doSetup;
+}
+async function doSetup(){
+  const name = document.getElementById('su-name').value.trim();
+  const token = document.getElementById('su-token').value.trim();
+  const statusEl = document.getElementById('su-status');
+  if(!name){
+    statusEl.innerHTML = `<span style="color:#fca5a5;">Please enter your name.</span>`;
+    return;
+  }
+  state.user.name = name;
+  state.user.token = token;
+ 
+  if(token){
+    statusEl.innerHTML = `<div class="spinner"></div> Verifying token with GitHub...`;
+    try{
+      const res = await fetch('https://api.github.com/user', { headers:{ 'Authorization':'Bearer '+token, 'Accept':'application/vnd.github+json' } });
+      if(res.ok){
+        const j = await res.json();
+        state.user.ghUser = j.login;
+        state.user.ghAvatar = j.avatar_url;
+        statusEl.innerHTML = `<span class="gh-ok">✓ Connected as ${j.login}</span>`;
+      }else{
+        statusEl.innerHTML = `<span style="color:#fca5a5;">Token couldn't be verified — continuing without GitHub link.</span>`;
+      }
+    }catch(e){
+      statusEl.innerHTML = `<span style="color:#fca5a5;">Couldn't reach GitHub from here — continuing without GitHub link.</span>`;
+    }
+  }
+  setTimeout(()=>{ state.screen='select'; render(); }, token ? 700 : 0);
+}
+ 
+/* ============ SELECT (pick 10 apps) ============ */
+function renderSelect(){
+  const wrap = document.createElement('div');
+  wrap.className='select-wrap';
+  let head = `
+    <div class="select-head">
+      <div>
+        <div class="eyebrow">Step 2 of 2</div>
+        <h1 class="display">Build your orbit, ${escapeHtml(state.user.name)}</h1>
+      </div>
+      <div class="counter ${state.selected.length===10?'full':''}">${state.selected.length} / 10 selected</div>
+    </div>`;
+  let body='';
+  CATS.forEach(cat=>{
+    body += `<div class="cat-label">${cat}</div><div class="grid">`;
+    APPS.filter(a=>a.cat===cat).forEach(a=>{
+      const picked = state.selected.includes(a.id);
+      const disabled = !picked && state.selected.length>=10;
+      body += `
+        <div class="app-card ${picked?'picked':''} ${disabled?'disabled':''}" data-id="${a.id}">
+          <div class="pick-badge">${picked?'✓':''}</div>
+          <div class="app-logo" style="background:linear-gradient(135deg, ${a.c1}, ${a.c2});">${a.letter}</div>
+          <div class="app-name">${a.name}</div>
+          <div class="app-cat">${a.cat.split(' ')[0]}</div>
+        </div>`;
+    });
+    body += `</div>`;
+  });
+  wrap.innerHTML = head + body;
+  root.innerHTML='';
+  root.appendChild(wrap);
+ 
+  const dock = document.createElement('div');
+  dock.className='dock';
+  dock.innerHTML = `<div class="dock-inner">
+      <button class="btn btn-primary" id="gen-btn" ${state.selected.length!==10?'disabled':''}>
+        ${state.selected.length===10 ? 'Generate Orbit Link →' : `Select ${10-state.selected.length} more to continue`}
+      </button>
+    </div>`;
+  root.appendChild(dock);
+ 
+  root.querySelectorAll('.app-card').forEach(card=>{
+    card.addEventListener('click', ()=>{
+      const id = card.getAttribute('data-id');
+      const idx = state.selected.indexOf(id);
+      if(idx>=0){ state.selected.splice(idx,1); }
+      else if(state.selected.length<10){ state.selected.push(id); }
+      render();
+    });
+  });
+  const genBtn = document.getElementById('gen-btn');
+  if(genBtn) genBtn.onclick = doGenerate;
+}
+ 
+async function doGenerate(){
+  const btn = document.getElementById('gen-btn');
+  btn.disabled=true; btn.textContent='Generating...';
+  const code = genCode();
+  const ok = await saveSession(code, {name:state.user.name, apps:state.selected, createdAt:Date.now()});
+  state.sessionCode = ok ? code : null;
+  state.screen='generated';
+  render();
+}
+ 
+/* ============ GENERATED / SHARE SCREEN ============ */
+function renderGenerated(){
+  root.innerHTML = `
+  <div class="center-screen">
+    <div class="panel">
+      <div class="eyebrow">Orbit Ready</div>
+      <h1 class="title display">Your share code</h1>
+      <p class="sub">Open this same Orbit Launcher link on another phone, tap <b>Join their session</b>, and enter this code to load your exact 10-app orbit there too.</p>
+      <div class="code-box">${state.sessionCode || '— unavailable —'}</div>
+      <ul class="step-list">
+        <li><span class="step-num">1</span> Share this artifact's link with the other phone.</li>
+        <li><span class="step-num">2</span> On that phone, choose "Join their session" from the sign-in screen.</li>
+        <li><span class="step-num">3</span> Enter <b>${state.sessionCode||'the code'}</b> — your selected apps load instantly.</li>
+      </ul>
+      <button class="btn btn-primary" id="go-home">Enter My Orbit →</button>
+    </div>
+  </div>`;
+  document.getElementById('go-home').onclick = ()=>{ state.screen='home'; state.activeIndex=0; render(); };
+}
+ 
+/* ============ HOME / 3D CAROUSEL ============ */
+function getSelectedApps(){
+  return state.selected.map(id=>APPS.find(a=>a.id===id)).filter(Boolean);
+}
+ 
+function renderHome(){
+  const apps = getSelectedApps();
+  const th = THEMES[state.theme];
+  document.body.style.background = th.bg;
+  document.documentElement.style.setProperty('--aurora1', th.a1);
+  document.documentElement.style.setProperty('--aurora2', th.a2);
+ 
+  const chips = Object.keys(THEMES).map(k=>{
+    const t = THEMES[k];
+    const active = k===state.theme;
+    return `<div class="theme-chip ${active?'active':''}" data-theme="${k}" style="${active?`background:linear-gradient(135deg, ${t.a1}, ${t.a2});`:''}">${t.label}</div>`;
+  }).join('');
+ 
+  root.innerHTML = `
+    <div class="home">
+      <div class="home-top">
+        <div class="home-brand"><span class="dot"></span><span class="display">Orbit · ${escapeHtml(state.user.name)}</span></div>
+        <div class="icon-btn" id="share-btn" title="Share this orbit">⇪</div>
+      </div>
+      <div class="theme-strip" id="theme-strip">${chips}</div>
+      <div class="stage" id="stage">
+        <div class="stage-inner" id="stage-inner"></div>
+      </div>
+      <div class="hud-bottom">
+        <div class="hud-name display" id="hud-name">—</div>
+        <div class="hud-sub" id="hud-sub">Scroll or swipe to browse · tap the glowing app to launch</div>
+        <div class="progress-dots" id="dots"></div>
+      </div>
+    </div>
+    <div class="toast" id="toast"></div>
+  `;
+ 
+  document.getElementById('share-btn').onclick = ()=>{
+    if(!state.sessionCode){ showToast('No share code yet for this orbit.'); return; }
+    showToast('Share code: '+state.sessionCode);
+  };
+  root.querySelectorAll('.theme-chip').forEach(chip=>{
+    chip.addEventListener('click', ()=>{
+      state.theme = chip.getAttribute('data-theme');
+      render();
+    });
+  });
+ 
+  layoutCarousel(apps);
+  wireCarouselInput(apps);
+}
+ 
+function showToast(msg){
+  const t = document.getElementById('toast');
+  if(!t) return;
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(()=>t.classList.remove('show'), 2200);
+}
+ 
+/* Position tiles according to theme + activeIndex */
+function layoutCarousel(apps){
+  const inner = document.getElementById('stage-inner');
+  if(!inner) return;
+  inner.innerHTML = apps.map((a,i)=>`
+    <div class="app-tile" data-idx="${i}" data-id="${a.id}">
+      <div class="tile-face" style="background:linear-gradient(160deg, rgba(255,255,255,0.10), rgba(255,255,255,0.02));">
+        <div class="glyph" style="background:linear-gradient(135deg, ${a.c1}, ${a.c2});">${a.letter}</div>
+        <div class="tname">${a.name}</div>
+      </div>
+    </div>`).join('');
+ 
+  updateCarouselTransforms(apps);
+ 
+  inner.querySelectorAll('.app-tile').forEach(tile=>{
+    tile.addEventListener('click', ()=>{
+      const idx = parseInt(tile.getAttribute('data-idx'),10);
+      if(idx === state.activeIndex){
+        launchApp(apps[idx]);
+      }else{
+        state.activeIndex = idx;
+        updateCarouselTransforms(apps);
+        updateHud(apps);
+      }
+    });
+  });
+  updateHud(apps);
+}
+ 
+function updateHud(apps){
+  const a = apps[state.activeIndex];
+  const nameEl = document.getElementById('hud-name');
+  const dotsEl = document.getElementById('dots');
+  if(nameEl) nameEl.textContent = a ? a.name : '—';
+  if(dotsEl){
+    dotsEl.innerHTML = apps.map((_,i)=>`<span class="${i===state.activeIndex?'on':''}"></span>`).join('');
+  }
+}
+ 
+function updateCarouselTransforms(apps){
+  const n = apps.length;
+  const active = state.activeIndex;
+  const tiles = document.querySelectorAll('.app-tile');
+  tiles.forEach(tile=>{
+    const i = parseInt(tile.getAttribute('data-idx'),10);
+    let offset = i - active;
+    // wrap offset to shortest path for ring-style themes
+    if(offset > n/2) offset -= n;
+    if(offset < -n/2) offset += n;
+    const abs = Math.abs(offset);
+    let transform = '', opacity = 1, z = 10-abs;
+ 
+    if(state.theme==='aurora'){
+      const angle = offset * 32;
+      const radius = 260;
+      transform = `rotateY(${angle}deg) translateZ(${radius}px) rotateY(${-angle}deg) scale(${offset===0?1.28:0.82})`;
+      opacity = abs>3 ? 0 : (1 - abs*0.22);
+    } else if(state.theme==='coverflow'){
+      const x = offset*100;
+      const rot = offset===0?0:(offset>0?-45:45);
+      const tz = offset===0?40:-80;
+      transform = `translateX(${x}px) translateZ(${tz}px) rotateY(${rot}deg) scale(${offset===0?1.25:0.85})`;
+      opacity = abs>4 ? 0 : (1 - abs*0.16);
+    } else if(state.theme==='cascade'){
+      const y = offset*26;
+      const x = offset*14;
+      const tz = -abs*60;
+      transform = `translate(${x}px, ${y}px) translateZ(${tz}px) rotate(${offset*3}deg) scale(${offset===0?1.3:0.88})`;
+      opacity = abs>5 ? 0 : (1 - abs*0.14);
+    } else if(state.theme==='cube'){
+      const angle = offset * (360/Math.max(n,6));
+      const radius = 240;
+      transform = `rotateY(${angle}deg) translateZ(${radius}px) rotateY(${-angle}deg) scale(${offset===0?1.3:0.75})`;
+      opacity = abs>3 ? 0.05 : (1 - abs*0.25);
+    } else if(state.theme==='fan'){
+      const angle = offset * 16;
+      const x = offset*70;
+      const y = abs*abs*6;
+      transform = `translate(${x}px, ${y}px) rotate(${angle}deg) scale(${offset===0?1.3:0.86})`;
+      opacity = abs>4 ? 0 : (1 - abs*0.18);
+    }
+ 
+    tile.style.transform = transform;
+    tile.style.opacity = opacity;
+    tile.style.zIndex = z;
+    tile.classList.toggle('active', offset===0);
+  });
+}
+ 
+function wireCarouselInput(apps){
+  const stage = document.getElementById('stage');
+  if(!stage) return;
+  let wheelLock = false;
+  stage.addEventListener('wheel', (e)=>{
+    e.preventDefault();
+    if(wheelLock) return;
+    wheelLock = true;
+    setTimeout(()=>wheelLock=false, 260);
+    const dir = e.deltaY > 0 ? 1 : -1;
+    step(dir, apps);
+  }, {passive:false});
+ 
+  let startX=0, startY=0, dragging=false;
+  stage.addEventListener('touchstart', e=>{
+    startX = e.touches[0].clientX; startY = e.touches[0].clientY; dragging=true;
+  }, {passive:true});
+  stage.addEventListener('touchend', e=>{
+    if(!dragging) return; dragging=false;
+    const dx = e.changedTouches[0].clientX - startX;
+    const dy = e.changedTouches[0].clientY - startY;
+    if(Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 40){
+      step(dx<0?1:-1, apps);
+    } else if(Math.abs(dy) > 40){
+      step(dy<0?1:-1, apps);
+    }
+  }, {passive:true});
+ 
+  document.addEventListener('keydown', (e)=>{
+    if(state.screen!=='home') return;
+    if(e.key==='ArrowRight' || e.key==='ArrowDown') step(1, apps);
+    if(e.key==='ArrowLeft' || e.key==='ArrowUp') step(-1, apps);
+    if(e.key==='Enter') launchApp(apps[state.activeIndex]);
+  });
+}
+ 
+function step(dir, apps){
+  const n = apps.length;
+  state.activeIndex = (state.activeIndex + dir + n) % n;
+  updateCarouselTransforms(apps);
+  updateHud(apps);
+}
+ 
+function launchApp(app){
+  if(!app) return;
+  showToast('Opening '+app.name+'…');
+  const start = Date.now();
+  // Attempt native app deep link; fall back to web if the app isn't installed.
+  const iframe = document.createElement('iframe');
+  iframe.style.display='none';
+  document.body.appendChild(iframe);
+  try{ iframe.src = app.scheme; }catch(e){}
+  window.location.href = app.scheme;
+  setTimeout(()=>{
+    document.body.removeChild(iframe);
+    if(Date.now() - start < 2000){
+      window.open(app.web, '_blank');
+    }
+  }, 900);
+}
+ 
+/* ============ UTIL ============ */
+function escapeHtml(s){
+  return (s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+ 
+/* ============ INIT ============ */
+initStars();
+render();
+</script>
+</body>
+</html>
+ 

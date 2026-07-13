@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -42,7 +41,7 @@ body{
 .stars{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.5;}
 .stars span{position:absolute;width:2px;height:2px;background:#fff;border-radius:50%;opacity:0.6;animation:twinkle 4s ease-in-out infinite;}
 @keyframes twinkle{0%,100%{opacity:0.15;}50%{opacity:0.8;}}
- 
+
 /* ---------- Card shell ---------- */
 .panel{
   width:100%;max-width:420px;
@@ -57,7 +56,7 @@ body{
   animation:rise .5s cubic-bezier(.2,.8,.2,1);
 }
 @keyframes rise{from{opacity:0;transform:translateY(18px) scale(.98);}to{opacity:1;transform:translateY(0) scale(1);}}
- 
+
 .eyebrow{
   font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--aurora1);
   font-weight:600;margin-bottom:10px;display:flex;align-items:center;gap:8px;
@@ -65,7 +64,7 @@ body{
 .eyebrow::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--aurora1);box-shadow:0 0 10px var(--aurora1);}
 h1.title{font-size:26px;font-weight:700;margin-bottom:6px;letter-spacing:-0.01em;}
 p.sub{color:var(--muted);font-size:14px;line-height:1.5;margin-bottom:26px;}
- 
+
 label{display:block;font-size:12px;color:var(--muted);margin:16px 0 6px;font-weight:600;letter-spacing:.02em;}
 input[type=text],input[type=password]{
   width:100%;padding:13px 14px;border-radius:12px;border:1px solid var(--border);
@@ -74,7 +73,7 @@ input[type=text],input[type=password]{
 }
 input::placeholder{color:#5a6178;}
 input:focus{border-color:var(--aurora1);background:rgba(125,211,252,0.06);}
- 
+
 .btn{
   width:100%;padding:14px 18px;border-radius:12px;border:none;cursor:pointer;
   font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:15px;letter-spacing:.01em;
@@ -104,12 +103,12 @@ input:focus{border-color:var(--aurora1);background:rgba(125,211,252,0.06);}
 .switch-link{color:var(--aurora1);cursor:pointer;text-decoration:underline;text-underline-offset:2px;}
 .divider{display:flex;align-items:center;gap:12px;margin:22px 0;color:var(--muted);font-size:12px;}
 .divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border);}
- 
+
 .status-line{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);margin-top:12px;min-height:18px;}
 .spinner{width:14px;height:14px;border-radius:50%;border:2px solid var(--border);border-top-color:var(--aurora1);animation:spin .7s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
 .gh-ok{color:var(--aurora3);}
- 
+
 /* ---------- Select screen ---------- */
 .select-wrap{width:100%;max-width:900px;margin:0 auto;padding:32px 20px 120px;position:relative;z-index:1;}
 .select-head{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:26px;}
@@ -142,14 +141,14 @@ input:focus{border-color:var(--aurora1);background:rgba(125,211,252,0.06);}
   background:rgba(0,0,0,.3);
 }
 .app-card.picked .pick-badge{background:var(--aurora1);border-color:var(--aurora1);color:#05070d;font-weight:700;}
- 
+
 .dock{
   position:fixed;bottom:0;left:0;right:0;padding:18px 20px calc(18px + env(safe-area-inset-bottom));
   background:linear-gradient(to top, rgba(5,7,13,0.97), rgba(5,7,13,0.85) 70%, transparent);
   z-index:5;display:flex;justify-content:center;
 }
 .dock-inner{width:100%;max-width:420px;}
- 
+
 /* ---------- Generated / share screen ---------- */
 .code-box{
   font-family:'Space Grotesk',sans-serif;font-size:38px;font-weight:700;letter-spacing:.14em;
@@ -164,7 +163,7 @@ input:focus{border-color:var(--aurora1);background:rgba(125,211,252,0.06);}
   flex-shrink:0;width:20px;height:20px;border-radius:50%;background:var(--card);border:1px solid var(--border);
   display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--text);font-weight:600;
 }
- 
+
 /* ================= HOME / CAROUSEL ================= */
 .home{min-height:100vh;position:relative;overflow:hidden;display:flex;flex-direction:column;z-index:1;transition:background 1s;}
 .home-top{display:flex;align-items:center;justify-content:space-between;padding:20px 22px;position:relative;z-index:20;}
@@ -183,7 +182,7 @@ input:focus{border-color:var(--aurora1);background:rgba(125,211,252,0.06);}
   font-family:'Space Grotesk',sans-serif;
 }
 .theme-chip.active{color:#05070d;border-color:transparent;}
- 
+
 .stage{flex:1;position:relative;perspective:1400px;perspective-origin:50% 50%;display:flex;align-items:center;justify-content:center;touch-action:pan-y;}
 .stage-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;}
 .app-tile{
@@ -204,14 +203,14 @@ input:focus{border-color:var(--aurora1);background:rgba(125,211,252,0.06);}
 }
 .app-tile .tname{font-size:10.5px;color:#fff;font-weight:600;text-shadow:0 2px 6px rgba(0,0,0,.6);letter-spacing:.01em;}
 .app-tile.active .tile-face{box-shadow:0 30px 70px -10px rgba(0,0,0,.8), 0 0 0 2px var(--aurora1), 0 0 40px -4px var(--aurora1);}
- 
+
 .hud-bottom{position:relative;z-index:20;padding:14px 22px calc(20px + env(safe-area-inset-bottom));text-align:center;}
 .hud-name{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:15px;margin-bottom:2px;}
 .hud-sub{font-size:11.5px;color:var(--muted);}
 .progress-dots{display:flex;gap:5px;justify-content:center;margin-top:12px;}
 .progress-dots span{width:5px;height:5px;border-radius:50%;background:var(--border);transition:all .3s;}
 .progress-dots span.on{background:var(--aurora1);width:16px;border-radius:3px;}
- 
+
 .toast{
   position:fixed;bottom:110px;left:50%;transform:translateX(-50%) translateY(10px);
   background:rgba(20,22,32,.95);border:1px solid var(--border);padding:12px 18px;border-radius:12px;
@@ -219,9 +218,9 @@ input:focus{border-color:var(--aurora1);background:rgba(125,211,252,0.06);}
   display:flex;align-items:center;gap:10px;white-space:nowrap;
 }
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
- 
+
 .back-mini{position:absolute;top:20px;left:20px;font-size:12px;color:var(--muted);cursor:pointer;z-index:20;display:flex;align-items:center;gap:6px;}
- 
+
 @media(max-width:480px){
   .panel{padding:28px 22px;border-radius:20px;}
   .app-tile{width:96px;height:96px;}
@@ -232,7 +231,7 @@ input:focus{border-color:var(--aurora1);background:rgba(125,211,252,0.06);}
 <body>
 <div class="stars" id="stars"></div>
 <div id="app"></div>
- 
+
 <script>
 /* ============ APP CATALOG ============ */
 const APPS = [
@@ -258,7 +257,7 @@ const APPS = [
   {id:'pinterest', name:'Pinterest', cat:'Lifestyle & Utility', letter:'P', c1:'#e60023', c2:'#ad081b', scheme:'pinterest://', web:'https://pinterest.com'},
 ];
 const CATS = [...new Set(APPS.map(a=>a.cat))];
- 
+
 const THEMES = {
   aurora:  {label:'Aurora Orbit',    a1:'#7dd3fc', a2:'#a78bfa', bg:'radial-gradient(ellipse 900px 600px at 50% 30%, rgba(125,211,252,.16), transparent 60%), radial-gradient(ellipse 800px 600px at 50% 110%, rgba(167,139,250,.14), transparent 60%), #05070d'},
   coverflow:{label:'Neon Coverflow', a1:'#ff2fd6', a2:'#22e0ff', bg:'radial-gradient(ellipse 900px 500px at 20% 0%, rgba(255,47,214,.15), transparent 60%), radial-gradient(ellipse 900px 500px at 80% 100%, rgba(34,224,255,.15), transparent 60%), #06040c'},
@@ -266,7 +265,7 @@ const THEMES = {
   cube:    {label:'Obsidian Cube',   a1:'#e9c46a', a2:'#8a6d1f', bg:'radial-gradient(circle at 50% 40%, #14120c, #05050a 75%)'},
   fan:     {label:'Sunset Fan',      a1:'#fb923c', a2:'#f472b6', bg:'radial-gradient(ellipse 900px 700px at 50% 120%, rgba(251,146,60,.25), transparent 60%), radial-gradient(ellipse 700px 500px at 20% -10%, rgba(244,114,182,.18), transparent 60%), #0a0710'},
 };
- 
+
 /* ============ STATE ============ */
 let state = {
   screen:'login',        // login | join | setup | select | generated | home
@@ -279,9 +278,9 @@ let state = {
   activeIndex:0,
   ghChecking:false,
 };
- 
+
 const root = document.getElementById('app');
- 
+
 /* ============ STORAGE HELPERS ============ */
 async function saveSession(code, payload){
   try{ await window.storage.set('session:'+code, JSON.stringify(payload), true); return true; }
@@ -300,7 +299,7 @@ function genCode(){
   for(let i=0;i<6;i++) s+=chars[Math.floor(Math.random()*chars.length)];
   return s;
 }
- 
+
 /* ============ STARFIELD ============ */
 function initStars(){
   const box = document.getElementById('stars');
@@ -311,7 +310,7 @@ function initStars(){
   }
   box.innerHTML = html;
 }
- 
+
 /* ============ RENDER DISPATCH ============ */
 function render(){
   if(state.screen==='login') return renderLogin();
@@ -321,7 +320,7 @@ function render(){
   if(state.screen==='generated') return renderGenerated();
   if(state.screen==='home') return renderHome();
 }
- 
+
 /* ============ LOGIN ============ */
 function renderLogin(){
   root.innerHTML = `
@@ -357,7 +356,7 @@ function doLogin(){
     render();
   }
 }
- 
+
 /* ============ JOIN (load a shared session code on this device) ============ */
 function renderJoin(){
   root.innerHTML = `
@@ -396,7 +395,7 @@ async function doJoin(){
   state.screen='home';
   render();
 }
- 
+
 /* ============ SETUP (name + github token) ============ */
 function renderSetup(){
   root.innerHTML = `
@@ -427,7 +426,7 @@ async function doSetup(){
   }
   state.user.name = name;
   state.user.token = token;
- 
+
   if(token){
     statusEl.innerHTML = `<div class="spinner"></div> Verifying token with GitHub...`;
     try{
@@ -446,7 +445,7 @@ async function doSetup(){
   }
   setTimeout(()=>{ state.screen='select'; render(); }, token ? 700 : 0);
 }
- 
+
 /* ============ SELECT (pick 10 apps) ============ */
 function renderSelect(){
   const wrap = document.createElement('div');
@@ -478,7 +477,7 @@ function renderSelect(){
   wrap.innerHTML = head + body;
   root.innerHTML='';
   root.appendChild(wrap);
- 
+
   const dock = document.createElement('div');
   dock.className='dock';
   dock.innerHTML = `<div class="dock-inner">
@@ -487,7 +486,7 @@ function renderSelect(){
       </button>
     </div>`;
   root.appendChild(dock);
- 
+
   root.querySelectorAll('.app-card').forEach(card=>{
     card.addEventListener('click', ()=>{
       const id = card.getAttribute('data-id');
@@ -500,7 +499,7 @@ function renderSelect(){
   const genBtn = document.getElementById('gen-btn');
   if(genBtn) genBtn.onclick = doGenerate;
 }
- 
+
 async function doGenerate(){
   const btn = document.getElementById('gen-btn');
   btn.disabled=true; btn.textContent='Generating...';
@@ -510,7 +509,7 @@ async function doGenerate(){
   state.screen='generated';
   render();
 }
- 
+
 /* ============ GENERATED / SHARE SCREEN ============ */
 function renderGenerated(){
   root.innerHTML = `
@@ -530,25 +529,25 @@ function renderGenerated(){
   </div>`;
   document.getElementById('go-home').onclick = ()=>{ state.screen='home'; state.activeIndex=0; render(); };
 }
- 
+
 /* ============ HOME / 3D CAROUSEL ============ */
 function getSelectedApps(){
   return state.selected.map(id=>APPS.find(a=>a.id===id)).filter(Boolean);
 }
- 
+
 function renderHome(){
   const apps = getSelectedApps();
   const th = THEMES[state.theme];
   document.body.style.background = th.bg;
   document.documentElement.style.setProperty('--aurora1', th.a1);
   document.documentElement.style.setProperty('--aurora2', th.a2);
- 
+
   const chips = Object.keys(THEMES).map(k=>{
     const t = THEMES[k];
     const active = k===state.theme;
     return `<div class="theme-chip ${active?'active':''}" data-theme="${k}" style="${active?`background:linear-gradient(135deg, ${t.a1}, ${t.a2});`:''}">${t.label}</div>`;
   }).join('');
- 
+
   root.innerHTML = `
     <div class="home">
       <div class="home-top">
@@ -567,7 +566,7 @@ function renderHome(){
     </div>
     <div class="toast" id="toast"></div>
   `;
- 
+
   document.getElementById('share-btn').onclick = ()=>{
     if(!state.sessionCode){ showToast('No share code yet for this orbit.'); return; }
     showToast('Share code: '+state.sessionCode);
@@ -578,11 +577,11 @@ function renderHome(){
       render();
     });
   });
- 
+
   layoutCarousel(apps);
   wireCarouselInput(apps);
 }
- 
+
 function showToast(msg){
   const t = document.getElementById('toast');
   if(!t) return;
@@ -591,7 +590,7 @@ function showToast(msg){
   clearTimeout(t._timer);
   t._timer = setTimeout(()=>t.classList.remove('show'), 2200);
 }
- 
+
 /* Position tiles according to theme + activeIndex */
 function layoutCarousel(apps){
   const inner = document.getElementById('stage-inner');
@@ -603,9 +602,9 @@ function layoutCarousel(apps){
         <div class="tname">${a.name}</div>
       </div>
     </div>`).join('');
- 
+
   updateCarouselTransforms(apps);
- 
+
   inner.querySelectorAll('.app-tile').forEach(tile=>{
     tile.addEventListener('click', ()=>{
       const idx = parseInt(tile.getAttribute('data-idx'),10);
@@ -620,7 +619,7 @@ function layoutCarousel(apps){
   });
   updateHud(apps);
 }
- 
+
 function updateHud(apps){
   const a = apps[state.activeIndex];
   const nameEl = document.getElementById('hud-name');
@@ -630,7 +629,7 @@ function updateHud(apps){
     dotsEl.innerHTML = apps.map((_,i)=>`<span class="${i===state.activeIndex?'on':''}"></span>`).join('');
   }
 }
- 
+
 function updateCarouselTransforms(apps){
   const n = apps.length;
   const active = state.activeIndex;
@@ -643,7 +642,7 @@ function updateCarouselTransforms(apps){
     if(offset < -n/2) offset += n;
     const abs = Math.abs(offset);
     let transform = '', opacity = 1, z = 10-abs;
- 
+
     if(state.theme==='aurora'){
       const angle = offset * 32;
       const radius = 260;
@@ -673,14 +672,14 @@ function updateCarouselTransforms(apps){
       transform = `translate(${x}px, ${y}px) rotate(${angle}deg) scale(${offset===0?1.3:0.86})`;
       opacity = abs>4 ? 0 : (1 - abs*0.18);
     }
- 
+
     tile.style.transform = transform;
     tile.style.opacity = opacity;
     tile.style.zIndex = z;
     tile.classList.toggle('active', offset===0);
   });
 }
- 
+
 function wireCarouselInput(apps){
   const stage = document.getElementById('stage');
   if(!stage) return;
@@ -693,7 +692,7 @@ function wireCarouselInput(apps){
     const dir = e.deltaY > 0 ? 1 : -1;
     step(dir, apps);
   }, {passive:false});
- 
+
   let startX=0, startY=0, dragging=false;
   stage.addEventListener('touchstart', e=>{
     startX = e.touches[0].clientX; startY = e.touches[0].clientY; dragging=true;
@@ -708,7 +707,7 @@ function wireCarouselInput(apps){
       step(dy<0?1:-1, apps);
     }
   }, {passive:true});
- 
+
   document.addEventListener('keydown', (e)=>{
     if(state.screen!=='home') return;
     if(e.key==='ArrowRight' || e.key==='ArrowDown') step(1, apps);
@@ -716,14 +715,14 @@ function wireCarouselInput(apps){
     if(e.key==='Enter') launchApp(apps[state.activeIndex]);
   });
 }
- 
+
 function step(dir, apps){
   const n = apps.length;
   state.activeIndex = (state.activeIndex + dir + n) % n;
   updateCarouselTransforms(apps);
   updateHud(apps);
 }
- 
+
 function launchApp(app){
   if(!app) return;
   showToast('Opening '+app.name+'…');
@@ -741,16 +740,15 @@ function launchApp(app){
     }
   }, 900);
 }
- 
+
 /* ============ UTIL ============ */
 function escapeHtml(s){
   return (s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
- 
+
 /* ============ INIT ============ */
 initStars();
 render();
 </script>
 </body>
 </html>
- 

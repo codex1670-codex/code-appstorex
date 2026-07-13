@@ -1,0 +1,744 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Nova Launcher — Build Your Home Screen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0A0C12;
+    --bg-panel: #12151E;
+    --bg-panel-2: #171B26;
+    --line: #262B3A;
+    --ink: #ECEEF5;
+    --ink-dim: #8B90A3;
+    --violet: #7C5CFF;
+    --violet-dim: #7C5CFF33;
+    --amber: #FF9F45;
+    --green: #3DDC97;
+    --danger: #FF5C6C;
+    --radius: 18px;
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(circle at 20% -10%, #1B1030 0%, transparent 45%),
+      radial-gradient(circle at 90% 110%, #0F2A26 0%, transparent 40%),
+      var(--bg);
+    color:var(--ink);
+    font-family:var(--font-body);
+    min-height:100vh;
+    overflow-x:hidden;
+  }
+  .app-root{ min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px; }
+  .screen{ width:100%; max-width:420px; animation: fadeUp .5s ease both; }
+  @keyframes fadeUp{ from{opacity:0; transform:translateY(14px);} to{opacity:1; transform:translateY(0);} }
+  .eyebrow{
+    font-family:var(--font-mono); font-size:12px; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--violet); display:flex; align-items:center; gap:8px; margin-bottom:10px;
+  }
+  .eyebrow::before{ content:''; width:6px; height:6px; border-radius:50%; background:var(--violet); box-shadow:0 0 10px var(--violet); }
+  h1.title{ font-family:var(--font-display); font-weight:700; font-size:30px; line-height:1.15; margin:0 0 8px; letter-spacing:-.01em; }
+  p.sub{ color:var(--ink-dim); font-size:14.5px; line-height:1.55; margin:0 0 28px; }
+  .panel{ background:linear-gradient(180deg, var(--bg-panel-2), var(--bg-panel)); border:1px solid var(--line); border-radius:var(--radius); padding:28px; }
+  label{ display:block; font-family:var(--font-mono); font-size:11.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-dim); margin:0 0 8px; }
+  .field{ margin-bottom:18px; }
+  input[type=text], input[type=password]{
+    width:100%; background:#0C0F17; border:1px solid var(--line); border-radius:11px; padding:13px 14px;
+    color:var(--ink); font-family:var(--font-body); font-size:14.5px; outline:none;
+    transition:border-color .15s ease, box-shadow .15s ease;
+  }
+  input:focus{ border-color:var(--violet); box-shadow:0 0 0 3px var(--violet-dim); }
+  .hint{ font-size:12px; color:var(--ink-dim); margin-top:7px; font-family:var(--font-mono); }
+  .btn{
+    appearance:none; border:none; cursor:pointer; font-family:var(--font-body); font-weight:600; font-size:14.5px;
+    border-radius:11px; padding:13px 18px; width:100%; transition:transform .12s ease, opacity .15s ease, box-shadow .15s ease;
+  }
+  .btn:active{ transform:scale(.98); }
+  .btn-primary{ background:linear-gradient(135deg, var(--violet), #5B3FE0); color:white; box-shadow:0 8px 24px -8px #7C5CFF66; }
+  .btn-primary:disabled{ opacity:.35; cursor:not-allowed; box-shadow:none; }
+  .btn-ghost{ background:transparent; border:1px solid var(--line); color:var(--ink); }
+  .btn-ghost:hover{ border-color:var(--violet); }
+  .error-box{
+    background:#2A1418; border:1px solid #4A2028; color:var(--danger); font-size:13px; padding:10px 12px;
+    border-radius:9px; margin-bottom:16px; display:none; font-family:var(--font-mono);
+  }
+  .divider-row{
+    display:flex; align-items:center; gap:12px; margin:22px 0; color:var(--ink-dim);
+    font-family:var(--font-mono); font-size:11px; text-transform:uppercase; letter-spacing:.08em;
+  }
+  .divider-row::before, .divider-row::after{ content:''; flex:1; height:1px; background:var(--line); }
+
+  /* ---------- Dashboard ---------- */
+  .wide{ max-width:640px; }
+  .top-row{ display:flex; align-items:center; justify-content:space-between; margin-bottom:22px; }
+  .profile-chip{ display:flex; align-items:center; gap:10px; background:var(--bg-panel); border:1px solid var(--line); border-radius:100px; padding:6px 14px 6px 6px; }
+  .avatar{ width:30px; height:30px; border-radius:50%; background:linear-gradient(135deg,var(--violet),var(--amber)); display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-weight:700; font-size:13px; }
+  .chip-name{ font-size:13px; font-weight:600; }
+  .chip-sub{ font-size:11px; color:var(--ink-dim); font-family:var(--font-mono); }
+
+  .apps-grid{ display:grid; grid-template-columns:repeat(4, 1fr); gap:12px; margin:20px 0 8px; }
+  @media (max-width:480px){ .apps-grid{ grid-template-columns:repeat(3, 1fr); } }
+  .app-tile{
+    position:relative; border-radius:16px; padding:14px 8px 10px; background:var(--bg-panel); border:1px solid var(--line);
+    text-align:center; cursor:pointer; transition:transform .15s ease, border-color .15s ease; user-select:none;
+  }
+  .app-tile:hover{ transform:translateY(-2px); }
+  .app-tile.selected{ border-color:var(--violet); box-shadow:0 0 0 1px var(--violet), 0 8px 20px -10px var(--violet); }
+  .app-tile.locked{ opacity:.3; pointer-events:none; }
+  .tile-icon{ width:44px; height:44px; border-radius:13px; margin:0 auto 8px; display:flex; align-items:center; justify-content:center; box-shadow:0 6px 16px -8px rgba(0,0,0,.6); }
+  .tile-icon svg{ width:52%; height:52%; }
+  .tile-name{ font-size:11.5px; font-weight:600; }
+  .tile-check{ position:absolute; top:6px; right:6px; width:16px; height:16px; border-radius:50%; background:var(--violet); display:none; align-items:center; justify-content:center; font-size:10px; color:white; }
+  .app-tile.selected .tile-check{ display:flex; }
+
+  .counter-bar{ display:flex; align-items:center; justify-content:space-between; font-family:var(--font-mono); font-size:12px; color:var(--ink-dim); margin:14px 0 4px; }
+  .counter-track{ height:4px; background:var(--line); border-radius:4px; overflow:hidden; margin-top:8px; }
+  .counter-fill{ height:100%; background:linear-gradient(90deg,var(--violet),var(--amber)); transition:width .2s ease; width:0%; }
+  .sticky-actions{ margin-top:22px; display:flex; gap:10px; }
+
+  /* ---------- Share screen ---------- */
+  .code-box{
+    font-family:var(--font-mono); font-size:30px; letter-spacing:.12em; text-align:center; background:#0C0F17;
+    border:1px dashed var(--violet); border-radius:14px; padding:22px 10px; color:var(--amber); margin:20px 0;
+  }
+  .mini-list{ display:flex; flex-wrap:wrap; gap:8px; margin:16px 0 22px; }
+  .mini-pill{ display:flex; align-items:center; gap:6px; background:var(--bg-panel); border:1px solid var(--line); border-radius:100px; padding:5px 10px 5px 5px; font-size:12px; }
+  .mini-pill .mp-ic{ width:20px; height:20px; border-radius:6px; display:flex; align-items:center; justify-content:center; }
+  .mini-pill .mp-ic svg{ width:60%; height:60%; }
+
+  /* ---------- Home screen (themed 3D stage) ---------- */
+  .home-wrap{
+    position:fixed; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    overflow:hidden; transition:background 1s ease;
+  }
+  .home-wrap.theme-orbit{ background: radial-gradient(circle at 50% 30%, #1A2A55 0%, #0A1220 55%, #060910 100%); }
+  .home-wrap.theme-coverflow{ background: radial-gradient(circle at 30% 15%, #26102E 0%, transparent 50%), radial-gradient(circle at 85% 90%, #0E241F 0%, transparent 45%), #08090D; }
+  .home-wrap.theme-cascade{ background: linear-gradient(160deg, #14161C 0%, #1D2027 60%, #12140F 100%); }
+  .home-wrap.theme-cube{ background: radial-gradient(circle at 50% 45%, #10202E 0%, #060B10 60%, #030507 100%); }
+  .home-wrap.theme-fan{ background: radial-gradient(circle at 50% 90%, #4A1030 0%, #240A22 45%, #0C0810 100%); }
+
+  .home-top{ position:absolute; top:0; left:0; right:0; display:flex; align-items:center; justify-content:space-between; padding:20px 22px; z-index:30; gap:10px; }
+  #home-owner{ font-family:var(--font-mono); font-size:12px; color:var(--ink-dim); }
+  .home-top-right{ display:flex; gap:8px; }
+  .exit-btn, .edit-btn{ background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15); color:var(--ink); border-radius:100px; padding:7px 14px; cursor:pointer; font-family:var(--font-mono); font-size:11.5px; }
+  .edit-btn{ background:var(--violet); border-color:var(--violet); color:white; }
+
+  .theme-switch{
+    position:absolute; top:64px; left:50%; transform:translateX(-50%); z-index:30;
+    display:flex; gap:6px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12);
+    padding:5px; border-radius:100px; backdrop-filter:blur(10px);
+    max-width:92vw; overflow-x:auto; scrollbar-width:none;
+  }
+  .theme-switch::-webkit-scrollbar{ display:none; }
+  .theme-switch button{
+    background:transparent; border:none; color:var(--ink-dim); font-family:var(--font-mono); font-size:11px;
+    padding:7px 13px; border-radius:100px; cursor:pointer; transition:all .2s ease; white-space:nowrap;
+  }
+  .theme-switch button.active{ background:var(--violet); color:white; }
+
+  .stage{ position:relative; width:100%; height:380px; perspective:1300px; display:flex; align-items:center; justify-content:center; touch-action:none; cursor:grab; }
+  .stage:active{ cursor:grabbing; }
+  .orbit-ring{
+    position:absolute; width:340px; height:340px; border-radius:50%; border:1px dashed rgba(255,255,255,.12);
+    top:50%; left:50%; transform:translate(-50%,-50%) rotateX(62deg); pointer-events:none; opacity:0;
+    transition:opacity .5s ease;
+  }
+  .home-wrap.theme-orbit .orbit-ring{ opacity:1; }
+
+  .cube-frame{
+    position:absolute; width:210px; height:210px; top:50%; left:50%;
+    border:1px solid rgba(120,200,255,.18); transform:translate(-50%,-50%) rotateX(18deg) rotateY(0deg);
+    pointer-events:none; opacity:0; transition:opacity .5s ease; border-radius:6px;
+  }
+  .home-wrap.theme-cube .cube-frame{ opacity:1; }
+
+  .fan-arc{
+    position:absolute; width:520px; height:520px; border-radius:50%;
+    border:1px dashed rgba(255,180,140,.14); bottom:-360px; left:50%; transform:translateX(-50%);
+    pointer-events:none; opacity:0; transition:opacity .5s ease;
+  }
+  .home-wrap.theme-fan .fan-arc{ opacity:1; }
+
+  .card{
+    position:absolute; width:132px; height:132px; border-radius:30px; display:flex; align-items:center; justify-content:center;
+    cursor:pointer; will-change:transform, opacity; box-shadow:0 24px 55px -20px rgba(0,0,0,.75);
+  }
+  .card svg{ width:44%; height:44%; }
+  .card .cname{
+    position:absolute; bottom:-28px; font-family:var(--font-display); font-size:13.5px; font-weight:700;
+    color:var(--ink); white-space:nowrap; opacity:0; transition:opacity .35s ease;
+  }
+  .card.current .cname{ opacity:1; }
+
+  .home-hint{ margin-top:60px; font-family:var(--font-mono); font-size:11px; color:var(--ink-dim); display:flex; gap:18px; z-index:5; }
+  .dots{ position:absolute; bottom:34px; display:flex; gap:6px; z-index:5; }
+  .dot{ width:6px; height:6px; border-radius:50%; background:rgba(255,255,255,.18); transition:all .3s ease; }
+  .dot.active{ width:18px; background:var(--violet); }
+
+  /* App launch overlay */
+  .app-view{
+    position:fixed; inset:0; z-index:50; display:flex; flex-direction:column;
+    transform:scale(.85); opacity:0; pointer-events:none; transition:transform .38s cubic-bezier(.2,.9,.3,1), opacity .3s ease;
+  }
+  .app-view.open{ transform:scale(1); opacity:1; pointer-events:auto; }
+  .app-view-top{ display:flex; align-items:center; gap:12px; padding:20px 20px 14px; }
+  .app-view-top button{ background:rgba(255,255,255,.14); border:none; color:white; width:32px; height:32px; border-radius:50%; cursor:pointer; font-size:15px; }
+  .app-view-top .avt-ic{ width:26px; height:26px; }
+  .app-view-title{ font-family:var(--font-display); font-weight:700; font-size:18px; color:white; }
+  .app-view-body{ flex:1; padding:0 20px 30px; display:flex; flex-direction:column; gap:14px; overflow-y:auto; }
+  .fake-row{ background:rgba(255,255,255,.09); border-radius:16px; padding:16px; color:rgba(255,255,255,.9); font-size:13px; }
+  .fake-row .frow-top{ display:flex; align-items:center; gap:10px; margin-bottom:8px; font-weight:600; }
+  .fake-avatar{ width:28px; height:28px; border-radius:50%; background:rgba(255,255,255,.25); }
+  .fake-bar{ height:10px; border-radius:6px; background:rgba(255,255,255,.18); margin-top:8px; }
+
+  .hidden{ display:none !important; }
+  ::selection{ background:var(--violet-dim); }
+</style>
+</head>
+<body>
+<div class="app-root">
+
+  <!-- ================= LOGIN ================= -->
+  <div class="screen" id="screen-login">
+    <div class="eyebrow">Nova Launcher · Access</div>
+    <h1 class="title">Sign in to build<br>your home screen.</h1>
+    <p class="sub">Log in, pick your ten favorite apps, then generate a code so any phone can view the same 3D home screen.</p>
+    <div class="panel">
+      <div class="error-box" id="login-error">Wrong username or password. Try again.</div>
+      <div class="field"><label>Username</label><input type="text" id="login-user" placeholder="code-x" autocomplete="off"></div>
+      <div class="field"><label>Password</label><input type="password" id="login-pass" placeholder="••••"></div>
+      <button class="btn btn-primary" onclick="doLogin()">Log in</button>
+      <div class="divider-row">or</div>
+      <button class="btn btn-ghost" onclick="showCodeEntry()">I have a share code</button>
+    </div>
+  </div>
+
+  <!-- ================= CODE ENTRY ================= -->
+  <div class="screen hidden" id="screen-code">
+    <div class="eyebrow">Nova Launcher · Shared Screen</div>
+    <h1 class="title">View someone's<br>home screen.</h1>
+    <p class="sub">Enter the 6-character code they generated to load their ten apps here.</p>
+    <div class="panel">
+      <div class="error-box" id="code-error">That code doesn't match anything shared yet.</div>
+      <div class="field"><label>Share code</label><input type="text" id="code-input" placeholder="e.g. 8F3KQ1" style="text-transform:uppercase; letter-spacing:.1em; font-family:var(--font-mono);"></div>
+      <button class="btn btn-primary" onclick="loadSharedCode()">Open home screen</button>
+      <div class="divider-row">or</div>
+      <button class="btn btn-ghost" onclick="showLogin()">Back to login</button>
+    </div>
+  </div>
+
+  <!-- ================= PROFILE ================= -->
+  <div class="screen hidden" id="screen-profile">
+    <div class="eyebrow">Step 1 of 2 · Profile</div>
+    <h1 class="title">Tell us who's<br>building this.</h1>
+    <p class="sub">Your name shows on the shared screen. Your GitHub token stays in this browser tab only — it's never saved or sent anywhere.</p>
+    <div class="panel">
+      <div class="field"><label>Your name</label><input type="text" id="profile-name" placeholder="e.g. Arjun"></div>
+      <div class="field">
+        <label>GitHub token <span style="opacity:.6;">(optional)</span></label>
+        <input type="password" id="profile-token" placeholder="ghp_••••••••••••">
+        <div class="hint">Kept in memory for this session only — never written to storage.</div>
+      </div>
+      <button class="btn btn-primary" id="profile-continue" onclick="doProfile()" disabled>Continue</button>
+    </div>
+  </div>
+
+  <!-- ================= DASHBOARD ================= -->
+  <div class="screen wide hidden" id="screen-dashboard">
+    <div class="top-row">
+      <div class="profile-chip">
+        <div class="avatar" id="chip-avatar">A</div>
+        <div><div class="chip-name" id="chip-name">—</div><div class="chip-sub" id="chip-sub">GitHub not linked</div></div>
+      </div>
+      <button class="btn-ghost btn" style="width:auto; padding:9px 16px;" onclick="logout()">Log out</button>
+    </div>
+
+    <div class="panel" id="dashboard-pre">
+      <div class="eyebrow">Step 2 of 2 · Apps</div>
+      <h1 class="title" style="font-size:24px;">Build your ten-app<br>home screen.</h1>
+      <p class="sub">Pick ten apps from the trending 20. They'll appear as a 3D card stack that anyone with your code can scroll through.</p>
+      <button class="btn btn-primary" onclick="openEditor()">Edit apps</button>
+    </div>
+
+    <div id="dashboard-editor" class="hidden">
+      <div class="panel">
+        <div class="eyebrow">Trending now</div>
+        <h1 class="title" style="font-size:22px;">Choose exactly 10.</h1>
+        <div class="counter-bar"><span id="counter-label">0 / 10 selected</span><span id="counter-status" style="color:var(--ink-dim);">pick 10 to continue</span></div>
+        <div class="counter-track"><div class="counter-fill" id="counter-fill"></div></div>
+        <div class="apps-grid" id="apps-grid"></div>
+        <div class="sticky-actions">
+          <button class="btn btn-ghost" onclick="closeEditor()">Back</button>
+          <button class="btn btn-primary" id="generate-btn" disabled onclick="generateLink()">Generate</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= SHARE RESULT ================= -->
+  <div class="screen hidden" id="screen-share">
+    <div class="eyebrow">All set</div>
+    <h1 class="title">Your home screen<br>is ready to share.</h1>
+    <p class="sub">Open Nova Launcher on any other phone, tap <em>"I have a share code"</em>, and enter this:</p>
+    <div class="panel">
+      <div class="code-box" id="share-code">——————</div>
+      <button class="btn btn-ghost" onclick="copyCode()" style="margin-bottom:18px;">Copy code</button>
+      <div class="hint" style="margin-bottom:6px;">Includes:</div>
+      <div class="mini-list" id="share-mini-list"></div>
+      <button class="btn btn-primary" onclick="viewOwnHome()">View my home screen</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- ================= HOME SCREEN ================= -->
+<div class="home-wrap theme-orbit hidden" id="home-wrap">
+  <div class="home-top">
+    <span id="home-owner">—'s home screen</span>
+    <div class="home-top-right">
+      <button class="edit-btn hidden" id="edit-apps-btn" onclick="editFromHome()">Edit apps</button>
+      <button class="exit-btn" onclick="exitHome()">Exit</button>
+    </div>
+  </div>
+  <div class="theme-switch" id="theme-switch">
+    <button data-theme="orbit" onclick="setTheme('orbit')">Aurora Orbit</button>
+    <button data-theme="coverflow" onclick="setTheme('coverflow')">Neon Coverflow</button>
+    <button data-theme="cascade" onclick="setTheme('cascade')">Slate Cascade</button>
+    <button data-theme="cube" onclick="setTheme('cube')">Obsidian Cube</button>
+    <button data-theme="fan" onclick="setTheme('fan')">Sunset Fan</button>
+  </div>
+  <div class="orbit-ring"></div>
+  <div class="cube-frame"></div>
+  <div class="fan-arc"></div>
+  <div class="stage" id="stage"></div>
+  <div class="dots" id="dots"></div>
+  <div class="home-hint"><span>← drag / scroll →</span><span>tap the front icon to open</span></div>
+</div>
+
+<!-- ================= SIMULATED APP VIEW ================= -->
+<div class="app-view" id="app-view">
+  <div class="app-view-top">
+    <button onclick="closeAppView()">←</button>
+    <div class="app-view-title" id="app-view-title">App</div>
+  </div>
+  <div class="app-view-body" id="app-view-body"></div>
+</div>
+
+<script>
+/* ---------------- ICONS ----------------
+   Original, simplified glyphs that evoke each app's category (camera, play button,
+   chat bubble, etc). These are custom line-art, not reproductions of any brand's
+   actual trademarked logo artwork. */
+const ICONS = {
+  camera: `<path d="M3 7h4l1.5-2h7L17 7h4v12H3V7z"/><circle cx="12" cy="13" r="3.6"/>`,
+  note: `<circle cx="8.5" cy="17" r="2.6"/><path d="M11.1 17V5l7-1.4V13"/><circle cx="18.1" cy="13" r="2.6"/>`,
+  play: `<rect x="3" y="4" width="18" height="16" rx="5"/><path d="M10 8.5l6 3.5-6 3.5v-7z" fill="currentColor" stroke="none"/>`,
+  chat: `<path d="M4 5h16v11H10l-4 4v-4H4V5z"/><circle cx="9" cy="10.5" r="0.9" fill="currentColor" stroke="none"/><circle cx="12.5" cy="10.5" r="0.9" fill="currentColor" stroke="none"/><circle cx="16" cy="10.5" r="0.9" fill="currentColor" stroke="none"/>`,
+  thumb: `<path d="M7 21V10h3l4-6 1 1v5h5l-1.5 11H7z"/>`,
+  ghost: `<path d="M5 20V11a7 7 0 0 1 14 0v9l-2.3-1.8L14.5 20l-2.5-1.8L9.5 20l-2.2-1.8L5 20z"/><circle cx="9.5" cy="11" r="1" fill="currentColor" stroke="none"/><circle cx="14.5" cy="11" r="1" fill="currentColor" stroke="none"/>`,
+  xmark: `<path d="M5 5l14 14M19 5L5 19"/>`,
+  plane: `<path d="M3 11.5L21 4l-6.5 17-3-6.5-6.5-3z"/>`,
+  headphones: `<path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="3" y="13" width="4" height="6" rx="1.5"/><rect x="17" y="13" width="4" height="6" rx="1.5"/>`,
+  film: `<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 9h18M7 5v4M7 15v4M17 5v4M17 15v4"/>`,
+  cart: `<path d="M4 5h2l2.2 11h9.6L20 8H7"/><circle cx="9.5" cy="19" r="1.4" fill="currentColor" stroke="none"/><circle cx="17" cy="19" r="1.4" fill="currentColor" stroke="none"/>`,
+  car: `<path d="M4 16V12l2.2-4.5h11.6L20 12v4"/><path d="M4 16h16M6.5 16v2M17.5 16v2"/><circle cx="7.5" cy="16" r="1.3" fill="currentColor" stroke="none"/><circle cx="16.5" cy="16" r="1.3" fill="currentColor" stroke="none"/>`,
+  pin: `<path d="M12 21s7-7.2 7-12a7 7 0 1 0-14 0c0 4.8 7 12 7 12z"/><circle cx="12" cy="9" r="2.4"/>`,
+  briefcase: `<rect x="3" y="8" width="18" height="11" rx="2"/><path d="M8 8V6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M3 13h18"/>`,
+  alien: `<ellipse cx="12" cy="13" rx="8" ry="7"/><circle cx="8.7" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="15.3" cy="12" r="1.6" fill="currentColor" stroke="none"/><path d="M8 6.5L6 3M16 6.5l2-3.5"/>`,
+  at: `<circle cx="12" cy="12" r="4.2"/><path d="M15.5 10.5V14a2.3 2.3 0 0 0 4.4-1v-1a7.9 7.9 0 1 0-3.4 6.5"/>`,
+  controller: `<rect x="3" y="8" width="18" height="9" rx="4.5"/><path d="M7.5 10.5v4M5.5 12.5h4"/><circle cx="15.5" cy="11" r="1" fill="currentColor" stroke="none"/><circle cx="18" cy="13.5" r="1" fill="currentColor" stroke="none"/>`,
+  glitch: `<rect x="4" y="4" width="16" height="16" rx="4"/><path d="M9 4v6M15 4v6M4 15h6M4 9h6" opacity=".55"/>`,
+  owl: `<circle cx="12" cy="13" r="7"/><path d="M6 8l-1.5-3M18 8l1.5-3"/><circle cx="9" cy="12" r="2"/><circle cx="15" cy="12" r="2"/><path d="M12 15.5l-1 1.6h2z" fill="currentColor" stroke="none"/>`,
+  bubble2: `<path d="M4 6h16v9.5H12l-3.5 3.2v-3.2H4V6z"/><path d="M8 10h8M8 12.5h5"/>`,
+};
+function iconSVG(type, strokeWidth){
+  const sw = strokeWidth || 1.7;
+  return `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round">${ICONS[type]}</svg>`;
+}
+
+/* ---------------- DATA ----------------
+   Names match real, well-known apps for recognizability, but the icon glyphs above
+   are original shapes evocative of each app's category rather than the official
+   trademarked logo artwork. */
+const ALL_APPS = [
+  {id:'instagram', name:'Instagram', icon:'camera', c1:'#8B3AB0', c2:'#F9834C', feed:['New reel from a friend you follow','Story from 3 people you know']},
+  {id:'tiktok', name:'TikTok', icon:'note', c1:'#141414', c2:'#3FE0D0', feed:['A trending sound is blowing up','Someone duetted a video you liked']},
+  {id:'youtube', name:'YouTube', icon:'play', c1:'#C4302B', c2:'#7A0F0C', feed:['A channel you subscribe to just posted','Up next: a video based on your history']},
+  {id:'whatsapp', name:'WhatsApp', icon:'chat', c1:'#25D366', c2:'#0B7A45', feed:['2 new messages in Family Group','Missed voice call from a contact']},
+  {id:'facebook', name:'Facebook', icon:'thumb', c1:'#1B5FC4', c2:'#0A2E63', feed:['A memory from 3 years ago today','A friend commented on your photo']},
+  {id:'snapchat', name:'Snapchat', icon:'ghost', c1:'#FFD230', c2:'#B89A00', feed:['New snap from a close friend','Your streak is about to expire']},
+  {id:'x', name:'X', icon:'xmark', c1:'#111318', c2:'#3A3F4B', feed:['A post from someone you follow is trending','3 new replies on your last post']},
+  {id:'telegram', name:'Telegram', icon:'plane', c1:'#2AA8DE', c2:'#0E5A85', feed:['New message in a channel you joined','A file was shared with you']},
+  {id:'spotify', name:'Spotify', icon:'headphones', c1:'#1DB954', c2:'#0B5A29', feed:['Your weekly playlist just refreshed','An artist you follow released a single']},
+  {id:'netflix', name:'Netflix', icon:'film', c1:'#C11119', c2:'#5E0509', feed:['New episode ready to continue watching','Because you watched something similar']},
+  {id:'amazon', name:'Amazon', icon:'cart', c1:'#FF9F00', c2:'#8A5300', feed:['Your order is out for delivery','Price dropped on an item in your list']},
+  {id:'uber', name:'Uber', icon:'car', c1:'#0E0E0E', c2:'#3A3A3A', feed:['A ride is 4 minutes away','Your last trip receipt is ready']},
+  {id:'pinterest', name:'Pinterest', icon:'pin', c1:'#D6262A', c2:'#7A1315', feed:['New pins matching your taste','A board you follow was updated']},
+  {id:'linkedin', name:'LinkedIn', icon:'briefcase', c1:'#0A66C2', c2:'#083D75', feed:['Someone viewed your profile','A connection started a new job']},
+  {id:'discord', name:'Discord', icon:'controller', c1:'#5865F2', c2:'#2B3092', feed:['A server you joined is active now','You were mentioned in a channel']},
+  {id:'reddit', name:'Reddit', icon:'alien', c1:'#FF4500', c2:'#8A2400', feed:['A post in your feed is trending up','Someone replied to your comment']},
+  {id:'wechat', name:'WeChat', icon:'bubble2', c1:'#2DC100', c2:'#166300', feed:['New moments update from a contact','A group chat has unread messages']},
+  {id:'threads', name:'Threads', icon:'at', c1:'#1A1A1A', c2:'#4A4A4A', feed:['A thread you started got new replies','Someone you follow posted']},
+  {id:'twitch', name:'Twitch', icon:'glitch', c1:'#6441A5', c2:'#2E1D55', feed:['A streamer you follow just went live','Your channel got a new follower']},
+  {id:'duolingo', name:'Duolingo', icon:'owl', c1:'#58CC02', c2:'#2C6E00', feed:["Don't lose your streak — practice today", 'A new unit just unlocked']},
+];
+
+/* ---------------- STATE ---------------- */
+let state = { loggedIn:false, name:'', githubToken:'', selected:new Set() };
+let currentApps = [];
+let profileName = '';
+let currentTheme = 'orbit';
+
+/* ---------------- SCREEN HELPERS ---------------- */
+function show(id){ document.querySelectorAll('.screen').forEach(s=>s.classList.add('hidden')); document.getElementById(id).classList.remove('hidden'); }
+function showLogin(){ show('screen-login'); }
+function showCodeEntry(){ show('screen-code'); }
+
+/* ---------------- LOGIN ---------------- */
+function doLogin(){
+  const u = document.getElementById('login-user').value.trim();
+  const p = document.getElementById('login-pass').value.trim();
+  const err = document.getElementById('login-error');
+  if(u === 'code-x' && p === '1234'){ err.style.display = 'none'; state.loggedIn = true; show('screen-profile'); }
+  else{ err.style.display = 'block'; }
+}
+
+/* ---------------- PROFILE ---------------- */
+const pName = document.getElementById('profile-name');
+pName.addEventListener('input', ()=>{ document.getElementById('profile-continue').disabled = pName.value.trim().length === 0; });
+function doProfile(){
+  state.name = document.getElementById('profile-name').value.trim();
+  state.githubToken = document.getElementById('profile-token').value.trim();
+  profileName = state.name;
+  document.getElementById('chip-name').textContent = state.name;
+  document.getElementById('chip-avatar').textContent = state.name.charAt(0).toUpperCase() || '?';
+  document.getElementById('chip-sub').textContent = state.githubToken ? 'GitHub linked (session only)' : 'GitHub not linked';
+  renderAppsGrid();
+  show('screen-dashboard');
+}
+function logout(){
+  state = {loggedIn:false, name:'', githubToken:'', selected:new Set()};
+  document.getElementById('login-user').value = '';
+  document.getElementById('login-pass').value = '';
+  document.getElementById('profile-name').value = '';
+  document.getElementById('profile-token').value = '';
+  document.getElementById('dashboard-pre').classList.remove('hidden');
+  document.getElementById('dashboard-editor').classList.add('hidden');
+  showLogin();
+}
+
+/* ---------------- APP GRID ---------------- */
+function renderAppsGrid(){
+  const grid = document.getElementById('apps-grid');
+  grid.innerHTML = '';
+  ALL_APPS.forEach(app=>{
+    const tile = document.createElement('div');
+    tile.className = 'app-tile';
+    tile.id = 'tile-' + app.id;
+    tile.onclick = ()=>toggleApp(app.id);
+    tile.innerHTML = `
+      <div class="tile-check">✓</div>
+      <div class="tile-icon" style="background:linear-gradient(135deg, ${app.c1}, ${app.c2});">${iconSVG(app.icon)}</div>
+      <div class="tile-name">${app.name}</div>
+    `;
+    grid.appendChild(tile);
+  });
+  updateCounter();
+}
+function toggleApp(id){
+  if(state.selected.has(id)){ state.selected.delete(id); }
+  else{ if(state.selected.size >= 10) return; state.selected.add(id); }
+  document.getElementById('tile-' + id).classList.toggle('selected');
+  updateCounter();
+}
+function updateCounter(){
+  const n = state.selected.size;
+  document.getElementById('counter-label').textContent = `${n} / 10 selected`;
+  document.getElementById('counter-fill').style.width = (n*10) + '%';
+  document.getElementById('counter-status').textContent = n === 10 ? 'ready to generate' : `pick ${10-n} more`;
+  document.getElementById('generate-btn').disabled = n !== 10;
+  document.querySelectorAll('.app-tile').forEach(t=>{
+    const id = t.id.replace('tile-','');
+    if(n >= 10 && !state.selected.has(id)) t.classList.add('locked'); else t.classList.remove('locked');
+  });
+}
+function openEditor(){ document.getElementById('dashboard-pre').classList.add('hidden'); document.getElementById('dashboard-editor').classList.remove('hidden'); }
+function closeEditor(){ document.getElementById('dashboard-editor').classList.add('hidden'); document.getElementById('dashboard-pre').classList.remove('hidden'); }
+
+/* ---------------- GENERATE + SHARE ---------------- */
+function makeCode(){
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let out = ''; for(let i=0;i<6;i++) out += chars[Math.floor(Math.random()*chars.length)];
+  return out;
+}
+async function generateLink(){
+  const appIds = Array.from(state.selected);
+  currentApps = appIds.map(id => ALL_APPS.find(a=>a.id===id));
+  const code = makeCode();
+  const payload = JSON.stringify({ owner: state.name, appIds });
+  try{ await window.storage.set('shareset:' + code, payload, true); }catch(e){ console.error('storage error', e); }
+  document.getElementById('share-code').textContent = code;
+  const mini = document.getElementById('share-mini-list');
+  mini.innerHTML = currentApps.map(a=>`<div class="mini-pill"><div class="mp-ic" style="background:linear-gradient(135deg, ${a.c1}, ${a.c2});">${iconSVG(a.icon,2)}</div>${a.name}</div>`).join('');
+  show('screen-share');
+}
+function copyCode(){ navigator.clipboard?.writeText(document.getElementById('share-code').textContent).catch(()=>{}); }
+async function loadSharedCode(){
+  const code = document.getElementById('code-input').value.trim().toUpperCase();
+  const err = document.getElementById('code-error');
+  try{
+    const res = await window.storage.get('shareset:' + code, true);
+    if(!res) throw new Error('missing');
+    const data = JSON.parse(res.value);
+    const apps = data.appIds.map(id => ALL_APPS.find(a=>a.id===id)).filter(Boolean);
+    err.style.display = 'none';
+    isOwnerSession = false;
+    enterHome(apps, data.owner || 'Someone');
+  }catch(e){ err.style.display = 'block'; }
+}
+
+/* ================= HOME SCREEN: THEMES + SMOOTH 3D SCROLL ================= */
+let position = 0;      // continuous, fractional carousel index
+let velocity = 0;
+let dragging = false;
+let dragStartX = 0;
+let dragStartPos = 0;
+let rafId = null;
+let isOwnerSession = false;
+
+function viewOwnHome(){
+  isOwnerSession = true;
+  enterHome(currentApps, profileName);
+}
+function enterHome(apps, owner){
+  currentApps = apps;
+  position = 0; velocity = 0;
+  document.getElementById('home-owner').textContent = `${owner || 'Your'}'s home screen`;
+  document.getElementById('edit-apps-btn').classList.toggle('hidden', !isOwnerSession);
+  buildStage();
+  setTheme(currentTheme, true);
+  document.getElementById('home-wrap').classList.remove('hidden');
+  startLoop();
+}
+function exitHome(){ document.getElementById('home-wrap').classList.add('hidden'); stopLoop(); }
+function editFromHome(){
+  exitHome();
+  document.getElementById('dashboard-pre').classList.add('hidden');
+  document.getElementById('dashboard-editor').classList.remove('hidden');
+  show('screen-dashboard');
+}
+
+function buildStage(){
+  const stage = document.getElementById('stage');
+  const dots = document.getElementById('dots');
+  stage.innerHTML = ''; dots.innerHTML = '';
+  currentApps.forEach((app, i)=>{
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.id = 'card-' + i;
+    card.style.background = `linear-gradient(135deg, ${app.c1}, ${app.c2})`;
+    card.innerHTML = `${iconSVG(app.icon,1.8)}<div class="cname">${app.name}</div>`;
+    card.onclick = ()=>{ if(getCurrentIndex() === i) launchApp(app); };
+    stage.appendChild(card);
+    const dot = document.createElement('div');
+    dot.className = 'dot'; dot.id = 'dot-' + i;
+    dots.appendChild(dot);
+  });
+}
+
+function setTheme(theme, silent){
+  currentTheme = theme;
+  const wrap = document.getElementById('home-wrap');
+  wrap.classList.remove('theme-orbit','theme-coverflow','theme-cascade');
+  wrap.classList.add('theme-' + theme);
+  document.querySelectorAll('.theme-switch button').forEach(b=>b.classList.toggle('active', b.dataset.theme === theme));
+  if(!silent) render();
+}
+
+function shortestDiff(i, pos, n){
+  let d = i - pos;
+  d = ((d % n) + n) % n;
+  if(d > n/2) d -= n;
+  return d;
+}
+
+function transformFor(diff){
+  const a = Math.abs(diff);
+  if(currentTheme === 'orbit'){
+    const angle = diff * 34;                 // degrees around the ring
+    const rad = angle * Math.PI/180;
+    const R = 190;
+    const x = Math.sin(rad) * R;
+    const z = (Math.cos(rad) - 1) * R;
+    const scale = Math.max(0.35, 1 - a*0.16);
+    const opacity = Math.max(0, 1 - a*0.32);
+    return { transform:`translateX(${x}px) translateZ(${z}px) rotateY(${-angle*0.6}deg) scale(${scale})`, opacity, z: 100 - a };
+  }
+  if(currentTheme === 'cascade'){
+    const y = diff * 46;
+    const z = -a * 150;
+    const rotX = diff * 14;
+    const scale = Math.max(0.3, 1 - a*0.17);
+    const opacity = Math.max(0, 1 - a*0.34);
+    return { transform:`translateY(${y}px) translateZ(${z}px) rotateX(${rotX}deg) scale(${scale})`, opacity, z: 100 - a };
+  }
+  if(currentTheme === 'cube'){
+    const angle = diff * 90;                 // hard 90° faces, like a rotating cube
+    const rad = angle * Math.PI/180;
+    const R = 100;
+    const x = Math.sin(rad) * R;
+    const z = (Math.cos(rad) - 1) * R;
+    const scale = a < 0.5 ? 1 : Math.max(0.55, 1 - (a-0.5)*0.5);
+    const opacity = a < 1.5 ? 1 - a*0.06 : Math.max(0, 1 - a*0.55);
+    return { transform:`translateX(${x}px) translateZ(${z}px) rotateY(${-angle}deg) scale(${scale})`, opacity, z: 100 - a };
+  }
+  if(currentTheme === 'fan'){
+    const angle = diff * 24;                 // cards splayed like a hand of cards
+    const rad = angle * Math.PI/180;
+    const R = 260;
+    const x = Math.sin(rad) * R * 0.62;
+    const y = (1 - Math.cos(rad)) * R * 0.34;
+    const scale = Math.max(0.4, 1 - a*0.15);
+    const opacity = Math.max(0, 1 - a*0.3);
+    return { transform:`translateX(${x}px) translateY(${y}px) translateZ(${-a*90}px) rotateZ(${angle*0.7}deg) scale(${scale})`, opacity, z: 100 - a };
+  }
+  // coverflow (default)
+  const x = diff * 128;
+  const z = -a * 150;
+  const rotY = Math.max(-70, Math.min(70, -diff * 30));
+  const scale = Math.max(0.32, 1 - a*0.19);
+  const opacity = Math.max(0, 1 - a*0.33);
+  return { transform:`translateX(${x}px) translateZ(${z}px) rotateY(${rotY}deg) scale(${scale})`, opacity, z: 100 - a };
+}
+
+function getCurrentIndex(){
+  const n = currentApps.length;
+  if(!n) return 0;
+  return ((Math.round(position) % n) + n) % n;
+}
+function render(){
+  const n = currentApps.length;
+  if(!n) return;
+  const current = getCurrentIndex();
+  for(let i=0;i<n;i++){
+    const card = document.getElementById('card-' + i);
+    if(!card) continue;
+    const dot = document.getElementById('dot-' + i);
+    const diff = shortestDiff(i, position, n);
+    const t = transformFor(diff);
+    card.style.transform = t.transform;
+    card.style.opacity = t.opacity;
+    card.style.zIndex = Math.round(t.z);
+    const isCurrent = i === current && Math.abs(diff) < 0.5;
+    card.classList.toggle('current', isCurrent);
+    if(dot) dot.classList.toggle('active', i === current);
+  }
+}
+
+function startLoop(){
+  stopLoop();
+  function tick(){
+    if(!dragging){
+      position += velocity;
+      velocity *= 0.90;
+      if(Math.abs(velocity) < 0.0015) velocity = 0;
+      // gentle spring toward the nearest whole card once movement settles
+      if(velocity === 0){
+        const target = Math.round(position);
+        const rest = target - position;
+        if(Math.abs(rest) > 0.0009){
+          position += rest * 0.18;
+        } else {
+          position = target;
+        }
+      }
+    }
+    render();
+    rafId = requestAnimationFrame(tick);
+  }
+  rafId = requestAnimationFrame(tick);
+}
+function stopLoop(){ if(rafId) cancelAnimationFrame(rafId); rafId = null; }
+
+function nudge(dir){ velocity += dir * 0.34; }
+
+/* wheel (trackpad / mouse wheel) → smooth continuous scroll */
+document.getElementById('stage').addEventListener('wheel', (e)=>{
+  e.preventDefault();
+  const n = currentApps.length || 1;
+  velocity += (e.deltaY + e.deltaX) * 0.0026;
+}, {passive:false});
+
+/* pointer drag → 1:1 smooth follow, then momentum on release */
+const stageEl = document.getElementById('stage');
+let lastX = 0, lastT = 0, lastV = 0;
+stageEl.addEventListener('pointerdown', (e)=>{
+  dragging = true; velocity = 0;
+  dragStartX = e.clientX; dragStartPos = position;
+  lastX = e.clientX; lastT = performance.now(); lastV = 0;
+  stageEl.setPointerCapture(e.pointerId);
+});
+stageEl.addEventListener('pointermove', (e)=>{
+  if(!dragging) return;
+  const dx = e.clientX - dragStartX;
+  position = dragStartPos - dx / 130;
+  const now = performance.now();
+  const dt = Math.max(1, now - lastT);
+  lastV = ((e.clientX - lastX) / dt);
+  lastX = e.clientX; lastT = now;
+});
+function endDrag(){
+  if(!dragging) return;
+  dragging = false;
+  velocity = -lastV * 3.4;
+}
+stageEl.addEventListener('pointerup', endDrag);
+stageEl.addEventListener('pointercancel', endDrag);
+stageEl.addEventListener('pointerleave', ()=>{ if(dragging) endDrag(); });
+
+/* keyboard arrows */
+document.addEventListener('keydown', (e)=>{
+  const wrap = document.getElementById('home-wrap');
+  if(wrap.classList.contains('hidden')) return;
+  if(e.key === 'ArrowRight') nudge(1);
+  if(e.key === 'ArrowLeft') nudge(-1);
+});
+
+/* ---------------- APP LAUNCH SIMULATION ---------------- */
+function launchApp(app){
+  const view = document.getElementById('app-view');
+  view.style.background = `linear-gradient(160deg, ${app.c1}, ${app.c2})`;
+  document.getElementById('app-view-title').textContent = app.name;
+  document.querySelector('.app-view-top').querySelectorAll('.avt-ic').forEach(el=>el.remove());
+  const titleEl = document.getElementById('app-view-title');
+  const icWrap = document.createElement('span');
+  icWrap.className = 'avt-ic';
+  icWrap.style.display = 'inline-flex';
+  icWrap.style.verticalAlign = 'middle';
+  icWrap.style.marginRight = '8px';
+  icWrap.innerHTML = iconSVG(app.icon, 2);
+  titleEl.parentNode.insertBefore(icWrap, titleEl);
+  const body = document.getElementById('app-view-body');
+  body.innerHTML = app.feed.map(line => `
+    <div class="fake-row">
+      <div class="frow-top"><div class="fake-avatar"></div>${app.name}</div>
+      ${line}
+      <div class="fake-bar" style="width:70%;"></div>
+      <div class="fake-bar" style="width:40%;"></div>
+    </div>
+  `).join('');
+  view.classList.add('open');
+}
+function closeAppView(){ document.getElementById('app-view').classList.remove('open'); }
+</script>
+</body>
+</html>
+ 

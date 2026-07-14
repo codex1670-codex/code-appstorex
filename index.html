@@ -492,6 +492,8 @@
     else{ renderStore(); showScreen("screen-home"); }
   });
 
+  let currentShareCode = null;
+
   $("save-selection-btn").addEventListener("click", async () => {
     if(selectedNames.length === 0){
       toast("Pick at least 1 app to continue");
@@ -499,7 +501,8 @@
     }
     if(cameFromProfile){
       const code = genCode();
-      await storageSet("profile:" + code, JSON.stringify({ name: profileName, apps: selectedNames }));
+      currentShareCode = code;
+      await storageSet("profile:" + code, JSON.stringify({ name: profileName, apps: selectedNames, theme: activeTheme.id }));
       const url = new URL(window.location.href);
       url.searchParams.set("code", code);
       $("share-link").value = url.toString();
@@ -508,6 +511,9 @@
       renderStore();
       showScreen("screen-home");
       toast("Selection updated");
+      if(currentShareCode){
+        storageSet("profile:" + currentShareCode, JSON.stringify({ name: profileName, apps: selectedNames, theme: activeTheme.id }));
+      }
     }
   });
 
@@ -545,6 +551,9 @@
         row.querySelectorAll(".theme-swatch").forEach(s => s.classList.remove("active"));
         el.classList.add("active");
         toast(t.name + " theme · " + t.tag);
+        if(currentShareCode){
+          storageSet("profile:" + currentShareCode, JSON.stringify({ name: profileName, apps: selectedNames, theme: t.id }));
+        }
       });
       row.appendChild(el);
     });
@@ -657,9 +666,10 @@
   }
 
   // ---------- entry ----------
-  function enterHome(name, apps){
+  function enterHome(name, apps, themeId){
     profileName = name || "Guest";
     selectedNames = Array.isArray(apps) && apps.length ? apps.filter(n => findApp(n)) : [];
+    activeTheme = THEMES.find(t => t.id === themeId) || THEMES[0];
     renderStore();
     showScreen("screen-home");
   }
@@ -672,7 +682,8 @@
       if(rec && rec.value){
         try{
           const data = JSON.parse(rec.value);
-          enterHome(data.name, data.apps);
+          currentShareCode = code.toUpperCase();
+          enterHome(data.name, data.apps, data.theme);
           return;
         }catch(e){}
       }

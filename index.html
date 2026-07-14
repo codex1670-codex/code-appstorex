@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>code—App Store Showcase</title>
+<title>Orbit — App Store Showcase</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -261,7 +261,7 @@
         <input type="password" id="profile-token" placeholder="ghp_xxxxxxxxxxxx">
         <div class="hint">Used only in this browser tab to personalize your session. It is never stored, saved, or included in the shareable link.</div>
       </div>
-      <div class="error-msg" id="profile-error">Please enter your name to continue.</div>
+      <div class="error-msg" id="profile-error">Please enter your name and GitHub token to continue.</div>
       <button class="btn btn-primary" id="generate-btn">Continue to app picker</button>
     </div>
   </div>
@@ -431,8 +431,16 @@
   // ---------- profile ----------
   $("generate-btn").addEventListener("click", () => {
     const name = $("profile-name").value.trim();
+    const token = $("profile-token").value.trim();
     const err = $("profile-error");
-    if(!name){ err.style.display = "block"; return; }
+    if(!name || !token){
+      err.style.display = "block";
+      const card = document.querySelector("#screen-profile .card");
+      card.classList.remove("shake");
+      void card.offsetWidth;
+      card.classList.add("shake");
+      return;
+    }
     err.style.display = "none";
     profileName = name;
     selectedNames = APPS_ALL.slice(0, MAX_PICK).map(a => a.name); // sensible default

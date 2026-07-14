@@ -2,753 +2,687 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Orbit Launcher</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Orbit — App Store Showcase</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg:#05070d;
-  --bg2:#0a0f1e;
-  --aurora1:#7dd3fc;
-  --aurora2:#a78bfa;
-  --aurora3:#34d399;
-  --text:#eef2ff;
-  --muted:#8b93b0;
-  --card:rgba(255,255,255,0.045);
-  --card-hi:rgba(255,255,255,0.09);
-  --border:rgba(255,255,255,0.09);
-  --danger:#f87171;
-  --radius:18px;
-}
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-html,body{height:100%;}
-body{
-  background:
-    radial-gradient(ellipse 900px 500px at 15% -10%, rgba(125,211,252,0.16), transparent 60%),
-    radial-gradient(ellipse 700px 500px at 110% 10%, rgba(167,139,250,0.14), transparent 60%),
-    radial-gradient(ellipse 800px 600px at 50% 120%, rgba(52,211,153,0.08), transparent 60%),
-    var(--bg);
-  color:var(--text);
-  font-family:'Inter',sans-serif;
-  min-height:100vh;
-  overflow-x:hidden;
-  position:relative;
-}
-.display{font-family:'Space Grotesk',sans-serif;}
-#app{min-height:100vh;display:flex;flex-direction:column;}
-.center-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;}
-.stars{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.5;}
-.stars span{position:absolute;width:2px;height:2px;background:#fff;border-radius:50%;opacity:0.6;animation:twinkle 4s ease-in-out infinite;}
-@keyframes twinkle{0%,100%{opacity:0.15;}50%{opacity:0.8;}}
+  :root{
+    --bg:#0b0e14;
+    --bg-soft:#0f131c;
+    --card:#12161f;
+    --card-border:#1f2531;
+    --accent1:#7c5cfc;
+    --accent2:#26d3b0;
+    --accent3:#ff5d73;
+    --text:#e7e9ee;
+    --muted:#8890a6;
+    --danger:#ff5d73;
+    --radius:20px;
+    --font-display:'Space Grotesk', sans-serif;
+    --font-body:'Inter', sans-serif;
+    --font-mono:'JetBrains Mono', monospace;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{height:100%;}
+  body{
+    font-family:var(--font-body);
+    background:var(--bg);
+    color:var(--text);
+    -webkit-font-smoothing:antialiased;
+  }
+  #stage{position:relative; width:100%; min-height:100vh;}
+  .orb{position:fixed; border-radius:50%; filter:blur(70px); opacity:0.3; pointer-events:none; z-index:0;}
+  .orb1{width:420px;height:420px;background:var(--accent1); top:-120px; left:-100px;}
+  .orb2{width:360px;height:360px;background:var(--accent2); bottom:-140px; right:-80px;}
+  .orb3{width:260px;height:260px;background:var(--accent3); top:40%; left:60%; opacity:0.15;}
 
-/* ---------- Card shell ---------- */
-.panel{
-  width:100%;max-width:420px;
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:24px;
-  padding:36px 32px;
-  backdrop-filter:blur(20px);
-  box-shadow:0 30px 80px -20px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.06);
-  position:relative;
-  z-index:1;
-  animation:rise .5s cubic-bezier(.2,.8,.2,1);
-}
-@keyframes rise{from{opacity:0;transform:translateY(18px) scale(.98);}to{opacity:1;transform:translateY(0) scale(1);}}
+  .screen{position:relative; z-index:1; min-height:100vh; display:none; align-items:center; justify-content:center; flex-direction:column; padding:24px;}
+  .screen.active{display:flex;}
+  .screen.top-align{justify-content:flex-start;}
 
-.eyebrow{
-  font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--aurora1);
-  font-weight:600;margin-bottom:10px;display:flex;align-items:center;gap:8px;
-}
-.eyebrow::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--aurora1);box-shadow:0 0 10px var(--aurora1);}
-h1.title{font-size:26px;font-weight:700;margin-bottom:6px;letter-spacing:-0.01em;}
-p.sub{color:var(--muted);font-size:14px;line-height:1.5;margin-bottom:26px;}
+  .card{
+    position:relative; z-index:2; width:100%; max-width:380px;
+    background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
+    border:1px solid var(--card-border); border-radius:var(--radius);
+    padding:36px 30px; backdrop-filter:blur(20px);
+    box-shadow:0 20px 60px rgba(0,0,0,0.45);
+    animation:cardIn 0.6s cubic-bezier(.16,1,.3,1);
+  }
+  @keyframes cardIn{ from{opacity:0; transform:translateY(24px) scale(0.97);} to{opacity:1; transform:translateY(0) scale(1);} }
 
-label{display:block;font-size:12px;color:var(--muted);margin:16px 0 6px;font-weight:600;letter-spacing:.02em;}
-input[type=text],input[type=password]{
-  width:100%;padding:13px 14px;border-radius:12px;border:1px solid var(--border);
-  background:rgba(255,255,255,0.03);color:var(--text);font-size:15px;font-family:'Inter',sans-serif;
-  outline:none;transition:border-color .2s, background .2s;
-}
-input::placeholder{color:#5a6178;}
-input:focus{border-color:var(--aurora1);background:rgba(125,211,252,0.06);}
+  .eyebrow{font-family:var(--font-mono); font-size:12px; letter-spacing:0.14em; text-transform:uppercase; color:var(--accent2); margin-bottom:10px; display:flex; align-items:center; gap:8px;}
+  .eyebrow::before{content:""; width:6px;height:6px;border-radius:50%; background:var(--accent2); box-shadow:0 0 8px var(--accent2);}
+  h1.title{font-family:var(--font-display); font-size:28px; font-weight:700; line-height:1.15; margin-bottom:6px; letter-spacing:-0.01em;}
+  p.sub{color:var(--muted); font-size:14px; margin-bottom:26px; line-height:1.5;}
+  .field{margin-bottom:16px;}
+  .field label{display:block; font-size:12px; font-weight:600; color:var(--muted); margin-bottom:7px; text-transform:uppercase; letter-spacing:0.06em;}
+  .field input{width:100%; padding:13px 14px; background:rgba(255,255,255,0.03); border:1px solid var(--card-border); border-radius:12px; color:var(--text); font-family:var(--font-mono); font-size:14px; outline:none; transition:border-color 0.2s, background 0.2s;}
+  .field input:focus{border-color:var(--accent1); background:rgba(124,92,252,0.06);}
+  .field .hint{font-size:11.5px; color:var(--muted); margin-top:6px; line-height:1.4;}
+  .btn{width:100%; padding:14px; border:none; border-radius:12px; font-family:var(--font-body); font-weight:600; font-size:14.5px; cursor:pointer; transition:transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s;}
+  .btn:active{transform:scale(0.98);}
+  .btn-primary{background:linear-gradient(135deg, var(--accent1), #5b3ff0); color:#fff; box-shadow:0 10px 30px rgba(124,92,252,0.35);}
+  .btn-primary:hover{box-shadow:0 14px 36px rgba(124,92,252,0.5);}
+  .btn-ghost{background:transparent; border:1px solid var(--card-border); color:var(--text); margin-top:10px;}
+  .btn-ghost:hover{border-color:var(--accent1);}
+  .error-msg{color:var(--danger); font-size:12.5px; margin-top:-6px; margin-bottom:14px; display:none;}
+  .shake{animation:shake 0.4s;}
+  @keyframes shake{ 10%,90%{transform:translateX(-1px);} 20%,80%{transform:translateX(2px);} 30%,50%,70%{transform:translateX(-6px);} 40%,60%{transform:translateX(6px);} }
 
-.btn{
-  width:100%;padding:14px 18px;border-radius:12px;border:none;cursor:pointer;
-  font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:15px;letter-spacing:.01em;
-  transition:transform .15s ease, box-shadow .2s ease, opacity .2s;
-  display:flex;align-items:center;justify-content:center;gap:8px;
-}
-.btn:active{transform:scale(.98);}
-.btn-primary{
-  background:linear-gradient(135deg, var(--aurora1), var(--aurora2));
-  color:#05070d;
-  box-shadow:0 10px 30px -8px rgba(125,211,252,0.5);
-}
-.btn-primary:hover{box-shadow:0 14px 36px -6px rgba(125,211,252,0.65);}
-.btn-primary:disabled{opacity:.35;box-shadow:none;cursor:not-allowed;}
-.btn-ghost{
-  background:transparent;border:1px solid var(--border);color:var(--text);
-}
-.btn-ghost:hover{background:rgba(255,255,255,0.05);}
-.error-msg{
-  margin-top:14px;padding:10px 12px;border-radius:10px;background:rgba(248,113,113,0.1);
-  border:1px solid rgba(248,113,113,0.3);color:#fca5a5;font-size:13px;display:none;
-}
-.error-msg.show{display:block;animation:shake .35s;}
-@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
-.hint{font-size:12px;color:var(--muted);margin-top:14px;text-align:center;line-height:1.5;}
-.hint b{color:var(--aurora3);}
-.switch-link{color:var(--aurora1);cursor:pointer;text-decoration:underline;text-underline-offset:2px;}
-.divider{display:flex;align-items:center;gap:12px;margin:22px 0;color:var(--muted);font-size:12px;}
-.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border);}
+  .link-box{display:flex; gap:8px; margin-bottom:18px;}
+  .link-box input{flex:1; font-size:12px; padding:10px 12px; background:rgba(255,255,255,0.03); border:1px solid var(--card-border); border-radius:10px; color:var(--muted); font-family:var(--font-mono);}
+  .copy-btn{padding:10px 14px; border-radius:10px; border:1px solid var(--card-border); background:rgba(255,255,255,0.03); color:var(--text); font-size:12px; cursor:pointer; white-space:nowrap;}
+  .copy-btn:hover{border-color:var(--accent2); color:var(--accent2);}
+  .note{font-size:12px; color:var(--muted); line-height:1.6; background:rgba(255,255,255,0.02); border-left:2px solid var(--accent1); padding:10px 12px; border-radius:6px; margin-bottom:20px;}
 
-.status-line{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);margin-top:12px;min-height:18px;}
-.spinner{width:14px;height:14px;border-radius:50%;border:2px solid var(--border);border-top-color:var(--aurora1);animation:spin .7s linear infinite;}
-@keyframes spin{to{transform:rotate(360deg);}}
-.gh-ok{color:var(--aurora3);}
+  /* ---------- HOME / APP STORE ---------- */
+  #screen-home{padding:0;}
+  .home-topbar{
+    position:sticky; top:0; z-index:5;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:20px 24px; background:rgba(11,14,20,0.75); backdrop-filter:blur(16px);
+    border-bottom:1px solid var(--card-border);
+  }
+  .home-topbar .greet-block .eyebrow{margin-bottom:2px;}
+  .home-topbar h1{font-family:var(--font-display); font-size:20px;}
+  .edit-btn{
+    display:flex; align-items:center; gap:7px;
+    padding:10px 16px; border-radius:999px; border:1px solid var(--card-border);
+    background:rgba(255,255,255,0.03); color:var(--text); font-size:13px; font-weight:600;
+    cursor:pointer; transition:border-color 0.2s, background 0.2s;
+    flex-shrink:0;
+  }
+  .edit-btn:hover{border-color:var(--accent1); background:rgba(124,92,252,0.08);}
+  .edit-btn svg{width:15px;height:15px;}
 
-/* ---------- Select screen ---------- */
-.select-wrap{width:100%;max-width:900px;margin:0 auto;padding:32px 20px 120px;position:relative;z-index:1;}
-.select-head{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:26px;}
-.select-head h1{font-size:28px;font-weight:700;}
-.counter{
-  font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;
-  padding:8px 16px;border-radius:999px;border:1px solid var(--border);background:var(--card);
-}
-.counter.full{color:var(--aurora3);border-color:rgba(52,211,153,.4);}
-.cat-label{
-  font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
-  margin:26px 0 12px;font-weight:600;display:flex;align-items:center;gap:10px;
-}
-.cat-label::after{content:'';flex:1;height:1px;background:var(--border);}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;}
-.app-card{
-  background:var(--card);border:1px solid var(--border);border-radius:16px;padding:14px;
-  cursor:pointer;transition:transform .15s ease, border-color .2s, background .2s;
-  display:flex;flex-direction:column;gap:10px;position:relative;
-}
-.app-card:hover{transform:translateY(-3px);background:var(--card-hi);}
-.app-card.picked{border-color:var(--aurora1);background:rgba(125,211,252,0.08);}
-.app-card.disabled{opacity:.35;cursor:not-allowed;}
-.app-logo{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:17px;color:#0a0f1e;box-shadow:0 6px 16px -4px rgba(0,0,0,.5);}
-.app-name{font-size:13.5px;font-weight:600;}
-.app-cat{font-size:10.5px;color:var(--muted);}
-.pick-badge{
-  position:absolute;top:10px;right:10px;width:20px;height:20px;border-radius:50%;
-  border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:11px;
-  background:rgba(0,0,0,.3);
-}
-.app-card.picked .pick-badge{background:var(--aurora1);border-color:var(--aurora1);color:#05070d;font-weight:700;}
+  /* ---------- SPOTLIGHT (click to open, scroll to zoom-cycle) ---------- */
+  .spotlight-wrap{
+    max-width:900px; margin:0 auto; padding:34px 22px 10px;
+    display:flex; flex-direction:column; align-items:center;
+  }
+  .spotlight-stage{
+    width:100%; max-width:340px; height:260px;
+    display:flex; align-items:center; justify-content:center;
+    perspective:900px; touch-action:pan-y; cursor:pointer;
+    position:relative;
+  }
+  .spotlight-icon{
+    width:180px; height:180px; border-radius:46px;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 30px 70px rgba(0,0,0,0.5);
+    transition:transform 0.32s cubic-bezier(.3,.8,.4,1), opacity 0.32s ease, filter 0.32s ease;
+  }
+  .spotlight-icon svg{width:56%;height:56%;}
+  .spotlight-icon.zoom-out{transform:scale(2.2); opacity:0; filter:blur(6px);}
+  .spotlight-icon.zoom-in-start{transform:scale(0.3); opacity:0; filter:blur(6px);}
 
-.dock{
-  position:fixed;bottom:0;left:0;right:0;padding:18px 20px calc(18px + env(safe-area-inset-bottom));
-  background:linear-gradient(to top, rgba(5,7,13,0.97), rgba(5,7,13,0.85) 70%, transparent);
-  z-index:5;display:flex;justify-content:center;
-}
-.dock-inner{width:100%;max-width:420px;}
+  .spotlight-icon.cube-out{transform:rotateY(105deg) scale(0.7); opacity:0;}
+  .spotlight-icon.cube-in-start{transform:rotateY(-105deg) scale(0.7); opacity:0;}
 
-/* ---------- Generated / share screen ---------- */
-.code-box{
-  font-family:'Space Grotesk',sans-serif;font-size:38px;font-weight:700;letter-spacing:.14em;
-  text-align:center;padding:22px;border-radius:16px;
-  background:linear-gradient(135deg, rgba(125,211,252,.12), rgba(167,139,250,.12));
-  border:1px solid rgba(125,211,252,.35);margin:18px 0;color:var(--aurora1);
-  text-shadow:0 0 24px rgba(125,211,252,.5);
-}
-.step-list{list-style:none;margin:18px 0;display:flex;flex-direction:column;gap:10px;}
-.step-list li{display:flex;gap:10px;font-size:13.5px;color:var(--muted);line-height:1.5;}
-.step-num{
-  flex-shrink:0;width:20px;height:20px;border-radius:50%;background:var(--card);border:1px solid var(--border);
-  display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--text);font-weight:600;
-}
+  .spotlight-icon.flip-out{transform:rotateX(115deg) scale(0.7); opacity:0;}
+  .spotlight-icon.flip-in-start{transform:rotateX(-115deg) scale(0.7); opacity:0;}
 
-/* ================= HOME / CAROUSEL ================= */
-.home{min-height:100vh;position:relative;overflow:hidden;display:flex;flex-direction:column;z-index:1;transition:background 1s;}
-.home-top{display:flex;align-items:center;justify-content:space-between;padding:20px 22px;position:relative;z-index:20;}
-.home-brand{display:flex;align-items:center;gap:10px;}
-.home-brand .dot{width:9px;height:9px;border-radius:50%;background:var(--aurora1);box-shadow:0 0 12px var(--aurora1);}
-.home-brand span{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:15px;letter-spacing:.02em;}
-.icon-btn{
-  width:38px;height:38px;border-radius:11px;border:1px solid var(--border);background:var(--card);
-  display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text);
-}
-.theme-strip{display:flex;gap:8px;overflow-x:auto;padding:0 22px 16px;position:relative;z-index:20;scrollbar-width:none;}
-.theme-strip::-webkit-scrollbar{display:none;}
-.theme-chip{
-  flex-shrink:0;padding:8px 14px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap;
-  border:1px solid var(--border);background:var(--card);color:var(--muted);cursor:pointer;transition:all .2s;
-  font-family:'Space Grotesk',sans-serif;
-}
-.theme-chip.active{color:#05070d;border-color:transparent;}
+  .spotlight-icon.slide-out{transform:translateX(-150px) scale(0.5) rotateZ(-14deg); opacity:0;}
+  .spotlight-icon.slide-in-start{transform:translateX(150px) scale(0.5) rotateZ(14deg); opacity:0;}
 
-.stage{flex:1;position:relative;perspective:1400px;perspective-origin:50% 50%;display:flex;align-items:center;justify-content:center;touch-action:pan-y;}
-.stage-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;}
-.app-tile{
-  position:absolute;top:50%;left:50%;width:118px;height:118px;
-  transform-style:preserve-3d;cursor:pointer;
-  transition:transform .55s cubic-bezier(.22,.9,.3,1), opacity .55s, filter .55s;
-  display:flex;align-items:center;justify-content:center;
-}
-.app-tile .tile-face{
-  width:100%;height:100%;border-radius:28px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
-  box-shadow:0 20px 50px -12px rgba(0,0,0,.7), inset 0 1px 0 rgba(255,255,255,.15);
-  border:1px solid rgba(255,255,255,.12);
-}
-.app-tile .glyph{
-  width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;
-  font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:22px;color:rgba(0,0,0,.75);
-  box-shadow:inset 0 1px 3px rgba(255,255,255,.4), 0 4px 10px rgba(0,0,0,.35);
-}
-.app-tile .tname{font-size:10.5px;color:#fff;font-weight:600;text-shadow:0 2px 6px rgba(0,0,0,.6);letter-spacing:.01em;}
-.app-tile.active .tile-face{box-shadow:0 30px 70px -10px rgba(0,0,0,.8), 0 0 0 2px var(--aurora1), 0 0 40px -4px var(--aurora1);}
+  .spotlight-icon.orbit-out{transform:rotate(300deg) scale(0.18); opacity:0;}
+  .spotlight-icon.orbit-in-start{transform:rotate(-300deg) scale(0.18); opacity:0;}
+  .spotlight-name{
+    font-family:var(--font-display); font-weight:700; font-size:19px; margin-top:18px;
+    transition:opacity 0.25s ease;
+  }
+  .spotlight-hint{
+    font-family:var(--font-mono); font-size:11.5px; color:var(--muted); margin-top:6px;
+    letter-spacing:0.05em;
+  }
+  .spotlight-dots{display:flex; gap:6px; margin-top:16px; flex-wrap:wrap; justify-content:center; max-width:280px;}
+  .spotlight-dot{width:6px;height:6px;border-radius:50%; background:var(--card-border); transition:background 0.2s, transform 0.2s;}
+  .spotlight-dot.active{background:var(--accent2); transform:scale(1.5);}
 
-.hud-bottom{position:relative;z-index:20;padding:14px 22px calc(20px + env(safe-area-inset-bottom));text-align:center;}
-.hud-name{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:15px;margin-bottom:2px;}
-.hud-sub{font-size:11.5px;color:var(--muted);}
-.progress-dots{display:flex;gap:5px;justify-content:center;margin-top:12px;}
-.progress-dots span{width:5px;height:5px;border-radius:50%;background:var(--border);transition:all .3s;}
-.progress-dots span.on{background:var(--aurora1);width:16px;border-radius:3px;}
+  body[data-theme="nebula"]{ --accent1:#7c5cfc; --accent2:#26d3b0; --accent3:#ff5d73; }
+  body[data-theme="aurora"]{ --accent1:#22c55e; --accent2:#06b6d4; --accent3:#a855f7; }
+  body[data-theme="sunset"]{ --accent1:#fb7185; --accent2:#f97316; --accent3:#facc15; }
+  body[data-theme="midnight"]{ --accent1:#6366f1; --accent2:#8b5cf6; --accent3:#22d3ee; }
+  body[data-theme="chrome"]{ --accent1:#94a3b8; --accent2:#e2e8f0; --accent3:#38bdf8; }
 
-.toast{
-  position:fixed;bottom:110px;left:50%;transform:translateX(-50%) translateY(10px);
-  background:rgba(20,22,32,.95);border:1px solid var(--border);padding:12px 18px;border-radius:12px;
-  font-size:13px;z-index:100;opacity:0;pointer-events:none;transition:all .3s;backdrop-filter:blur(10px);
-  display:flex;align-items:center;gap:10px;white-space:nowrap;
-}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+  .theme-row{
+    display:flex; align-items:center; gap:14px; justify-content:center;
+    margin:4px 0 26px; flex-wrap:wrap;
+  }
+  .theme-row .theme-label{
+    font-family:var(--font-mono); font-size:10.5px; color:var(--muted);
+    text-transform:uppercase; letter-spacing:0.08em; margin-right:2px;
+  }
+  .theme-swatch{
+    width:28px; height:28px; border-radius:50%; cursor:pointer; position:relative;
+    border:2px solid transparent; transition:transform 0.2s ease, border-color 0.2s ease;
+  }
+  .theme-swatch:hover{transform:scale(1.1);}
+  .theme-swatch.active{border-color:var(--text); transform:scale(1.14);}
+  .theme-swatch .anim-tag{
+    position:absolute; top:34px; left:50%; transform:translateX(-50%);
+    font-family:var(--font-mono); font-size:8.5px; color:var(--muted); white-space:nowrap; opacity:0;
+    transition:opacity 0.2s ease; pointer-events:none;
+  }
+  .theme-swatch.active .anim-tag{opacity:1;}
 
-.back-mini{position:absolute;top:20px;left:20px;font-size:12px;color:var(--muted);cursor:pointer;z-index:20;display:flex;align-items:center;gap:6px;}
 
-@media(max-width:480px){
-  .panel{padding:28px 22px;border-radius:20px;}
-  .app-tile{width:96px;height:96px;}
-  .app-tile .glyph{width:46px;height:46px;font-size:18px;}
-}
+  .empty-state{
+    max-width:420px; margin:60px auto; text-align:center; color:var(--muted); padding:0 20px;
+  }
+  .empty-state h2{font-family:var(--font-display); color:var(--text); margin-bottom:10px; font-size:20px;}
+
+  /* ---------- PICKER (EDIT) SCREEN ---------- */
+  #screen-picker{padding:0;}
+  .picker-topbar{
+    position:sticky; top:0; z-index:5;
+    display:flex; align-items:center; gap:14px;
+    padding:20px 24px; background:rgba(11,14,20,0.85); backdrop-filter:blur(16px);
+    border-bottom:1px solid var(--card-border);
+  }
+  .picker-back{
+    width:38px;height:38px;border-radius:50%; border:1px solid var(--card-border);
+    background:rgba(255,255,255,0.03); color:var(--text); cursor:pointer; font-size:16px; flex-shrink:0;
+  }
+  .picker-back:hover{border-color:var(--accent1);}
+  .picker-title-block h1{font-family:var(--font-display); font-size:18px;}
+  .picker-title-block p{font-size:12px; color:var(--muted); margin-top:2px;}
+  .picker-counter{
+    margin-left:auto; font-family:var(--font-mono); font-size:12px; color:var(--accent2);
+    background:rgba(38,211,176,0.08); padding:6px 12px; border-radius:999px; flex-shrink:0;
+  }
+  .picker-grid{
+    max-width:900px; margin:0 auto; padding:22px;
+    display:grid; grid-template-columns:repeat(auto-fill, minmax(150px, 1fr)); gap:14px;
+  }
+  .pick-card{
+    background:var(--card); border:1.5px solid var(--card-border); border-radius:18px;
+    padding:16px 10px; text-align:center; cursor:pointer; position:relative;
+    transition:border-color 0.2s ease, transform 0.2s ease, background 0.2s ease;
+  }
+  .pick-card:active{transform:scale(0.97);}
+  .pick-card.selected{border-color:var(--accent2); background:rgba(38,211,176,0.06);}
+  .pick-icon{width:52px;height:52px;border-radius:14px; margin:0 auto 10px; display:flex; align-items:center; justify-content:center;}
+  .pick-icon svg{width:56%;height:56%;}
+  .pick-name{font-size:12.5px; font-weight:600; font-family:var(--font-display);}
+  .pick-check{
+    position:absolute; top:8px; right:8px; width:20px;height:20px;border-radius:50%;
+    background:var(--card-border); display:flex;align-items:center;justify-content:center;
+    font-size:11px; color:transparent; transition:background 0.2s, color 0.2s;
+  }
+  .pick-card.selected .pick-check{background:var(--accent2); color:#06231d;}
+  .picker-footer{
+    position:sticky; bottom:0; padding:16px 22px 24px; background:linear-gradient(0deg, var(--bg) 60%, transparent);
+  }
+  .picker-footer .btn{max-width:900px; margin:0 auto;}
+
+  .toast{
+    position:fixed; bottom:26px; left:50%; transform:translateX(-50%) translateY(20px);
+    background:var(--card); border:1px solid var(--card-border); color:var(--text);
+    padding:12px 20px; border-radius:12px; font-size:13px; opacity:0; pointer-events:none;
+    transition:opacity 0.25s, transform 0.25s; z-index:50;
+  }
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+
+  @media (prefers-reduced-motion: reduce){ *{animation-duration:0.001ms !important; transition-duration:0.001ms !important;} }
+  ::selection{background:var(--accent1); color:#fff;}
 </style>
 </head>
 <body>
-<div class="stars" id="stars"></div>
-<div id="app"></div>
+
+<div id="stage">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+
+  <!-- LOGIN -->
+  <div class="screen active" id="screen-login">
+    <div class="card">
+      <div class="eyebrow">Orbit Access</div>
+      <h1 class="title">Sign in</h1>
+      <p class="sub">Enter your credentials to set up a personalized showcase link.</p>
+      <div class="field"><label>Username</label><input type="text" id="login-user" autocomplete="off" placeholder="username"></div>
+      <div class="field"><label>Password</label><input type="password" id="login-pass" placeholder="••••••"></div>
+      <div class="error-msg" id="login-error">Incorrect username or password.</div>
+      <button class="btn btn-primary" id="login-btn">Sign in</button>
+    </div>
+  </div>
+
+  <!-- PROFILE -->
+  <div class="screen" id="screen-profile">
+    <div class="card">
+      <div class="eyebrow">Step 2 of 3</div>
+      <h1 class="title">Set up your profile</h1>
+      <p class="sub">This personalizes the showcase that gets shared.</p>
+      <div class="field"><label>Your name</label><input type="text" id="profile-name" placeholder="e.g. Arun"></div>
+      <div class="field">
+        <label>GitHub token</label>
+        <input type="password" id="profile-token" placeholder="ghp_xxxxxxxxxxxx">
+        <div class="hint">Used only in this browser tab to personalize your session. It is never stored, saved, or included in the shareable link.</div>
+      </div>
+      <div class="error-msg" id="profile-error">Please enter your name to continue.</div>
+      <button class="btn btn-primary" id="generate-btn">Continue to app picker</button>
+    </div>
+  </div>
+
+  <!-- GENERATE / SHARE (shown after picking apps) -->
+  <div class="screen" id="screen-generate">
+    <div class="card">
+      <div class="eyebrow">Ready to share</div>
+      <h1 class="title">Your link is ready</h1>
+      <p class="sub">Send this link to anyone — opening it on any phone or computer drops them straight onto your app store page.</p>
+      <div class="link-box"><input type="text" id="share-link" readonly><button class="copy-btn" id="copy-link-btn">Copy</button></div>
+      <div class="note">The link carries your name and your 10 chosen apps. You can still tap "Edit" later to change the selection.</div>
+      <button class="btn btn-primary" id="continue-btn">View my app store</button>
+    </div>
+  </div>
+
+  <!-- HOME / APP STORE -->
+  <div class="screen top-align" id="screen-home">
+    <div class="home-topbar">
+      <div class="greet-block">
+        <div class="eyebrow">Welcome</div>
+        <h1 id="home-title">-name-</h1>
+      </div>
+      <button class="edit-btn" id="edit-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+        Edit
+      </button>
+    </div>
+    <div class="theme-row" id="theme-row">
+      <span class="theme-label">Theme</span>
+    </div>
+    <div class="spotlight-wrap" id="spotlight-wrap">
+      <div class="spotlight-stage" id="spotlight-stage">
+        <div class="spotlight-icon" id="spotlight-icon"></div>
+      </div>
+      <div class="spotlight-name" id="spotlight-name">—</div>
+      <div class="spotlight-hint">tap the logo to open · scroll or swipe to explore</div>
+      <div class="spotlight-dots" id="spotlight-dots"></div>
+    </div>
+    <div class="empty-state" id="empty-state" style="display:none;">
+      <h2>No apps selected yet</h2>
+      <p>Tap Edit above and choose up to 10 trending apps for 2026 to build your showcase.</p>
+    </div>
+  </div>
+
+  <!-- PICKER / EDIT -->
+  <div class="screen top-align" id="screen-picker">
+    <div class="picker-topbar">
+      <button class="picker-back" id="picker-back-btn">‹</button>
+      <div class="picker-title-block">
+        <h1>Trending in 2026</h1>
+        <p>Pick up to 10 apps for your showcase</p>
+      </div>
+      <div class="picker-counter" id="picker-counter">0 / 10</div>
+    </div>
+    <div class="picker-grid" id="picker-grid"></div>
+    <div class="picker-footer">
+      <button class="btn btn-primary" id="save-selection-btn">Save selection</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+</div>
 
 <script>
-/* ============ APP CATALOG ============ */
-const APPS = [
-  {id:'chatgpt', name:'ChatGPT', cat:'Artificial Intelligence', letter:'G', c1:'#10a37f', c2:'#1a7f64', scheme:'chatgpt://', web:'https://chatgpt.com'},
-  {id:'gemini', name:'Google Gemini', cat:'Artificial Intelligence', letter:'G', c1:'#4285f4', c2:'#9b72cb', scheme:'gemini://', web:'https://gemini.google.com'},
-  {id:'instagram', name:'Instagram', cat:'Social & Communication', letter:'I', c1:'#f58529', c2:'#dd2a7b', scheme:'instagram://app', web:'https://instagram.com'},
-  {id:'whatsapp', name:'WhatsApp', cat:'Social & Communication', letter:'W', c1:'#25d366', c2:'#128c7e', scheme:'whatsapp://send', web:'https://web.whatsapp.com'},
-  {id:'whatsapp_biz', name:'WhatsApp Business', cat:'Social & Communication', letter:'B', c1:'#25d366', c2:'#075e54', scheme:'whatsapp://send', web:'https://web.whatsapp.com'},
-  {id:'x', name:'X', cat:'Social & Communication', letter:'X', c1:'#e5e5e5', c2:'#8f8f8f', scheme:'twitter://', web:'https://x.com'},
-  {id:'discord', name:'Discord', cat:'Social & Communication', letter:'D', c1:'#5865f2', c2:'#404eed', scheme:'discord://', web:'https://discord.com/app'},
-  {id:'telegram', name:'Telegram', cat:'Social & Communication', letter:'T', c1:'#2aabee', c2:'#229ed9', scheme:'tg://', web:'https://web.telegram.org'},
-  {id:'snapchat', name:'Snapchat', cat:'Social & Communication', letter:'S', c1:'#fffc00', c2:'#e6e300', scheme:'snapchat://', web:'https://snapchat.com'},
-  {id:'threads', name:'Threads', cat:'Social & Communication', letter:'@', c1:'#f2f2f2', c2:'#a6a6a6', scheme:'barcelona://', web:'https://threads.net'},
-  {id:'spotify', name:'Spotify', cat:'Streaming & Entertainment', letter:'S', c1:'#1db954', c2:'#169c46', scheme:'spotify://', web:'https://open.spotify.com'},
-  {id:'youtube', name:'YouTube', cat:'Streaming & Entertainment', letter:'Y', c1:'#ff0000', c2:'#cc0000', scheme:'youtube://', web:'https://youtube.com'},
-  {id:'crunchyroll', name:'Crunchyroll', cat:'Streaming & Entertainment', letter:'C', c1:'#f47521', c2:'#e0680f', scheme:'crunchyroll://', web:'https://crunchyroll.com'},
-  {id:'netflix', name:'Netflix', cat:'Streaming & Entertainment', letter:'N', c1:'#e50914', c2:'#b0060f', scheme:'nflx://', web:'https://netflix.com'},
-  {id:'tiktok', name:'TikTok', cat:'Streaming & Entertainment', letter:'T', c1:'#25f4ee', c2:'#fe2c55', scheme:'tiktok://', web:'https://tiktok.com'},
-  {id:'duolingo', name:'Duolingo', cat:'Lifestyle & Utility', letter:'D', c1:'#58cc02', c2:'#3fa302', scheme:'duolingo://', web:'https://duolingo.com'},
-  {id:'zoom', name:'Zoom Workplace', cat:'Lifestyle & Utility', letter:'Z', c1:'#2d8cff', c2:'#0b5cd6', scheme:'zoomus://', web:'https://zoom.us'},
-  {id:'amazon', name:'Amazon', cat:'Lifestyle & Utility', letter:'a', c1:'#ff9900', c2:'#e88a00', scheme:'com.amazon.mobile.shopping://', web:'https://amazon.com'},
-  {id:'linkedin', name:'LinkedIn', cat:'Lifestyle & Utility', letter:'in', c1:'#0a66c2', c2:'#004182', scheme:'linkedin://', web:'https://linkedin.com'},
-  {id:'pinterest', name:'Pinterest', cat:'Lifestyle & Utility', letter:'P', c1:'#e60023', c2:'#ad081b', scheme:'pinterest://', web:'https://pinterest.com'},
-];
-const CATS = [...new Set(APPS.map(a=>a.cat))];
+(function(){
+  "use strict";
 
-const THEMES = {
-  aurora:  {label:'Aurora Orbit',    a1:'#7dd3fc', a2:'#a78bfa', bg:'radial-gradient(ellipse 900px 600px at 50% 30%, rgba(125,211,252,.16), transparent 60%), radial-gradient(ellipse 800px 600px at 50% 110%, rgba(167,139,250,.14), transparent 60%), #05070d'},
-  coverflow:{label:'Neon Coverflow', a1:'#ff2fd6', a2:'#22e0ff', bg:'radial-gradient(ellipse 900px 500px at 20% 0%, rgba(255,47,214,.15), transparent 60%), radial-gradient(ellipse 900px 500px at 80% 100%, rgba(34,224,255,.15), transparent 60%), #06040c'},
-  cascade: {label:'Slate Cascade',   a1:'#94a3b8', a2:'#64748b', bg:'linear-gradient(180deg, #0b1120, #060910)'},
-  cube:    {label:'Obsidian Cube',   a1:'#e9c46a', a2:'#8a6d1f', bg:'radial-gradient(circle at 50% 40%, #14120c, #05050a 75%)'},
-  fan:     {label:'Sunset Fan',      a1:'#fb923c', a2:'#f472b6', bg:'radial-gradient(ellipse 900px 700px at 50% 120%, rgba(251,146,60,.25), transparent 60%), radial-gradient(ellipse 700px 500px at 20% -10%, rgba(244,114,182,.18), transparent 60%), #0a0710'},
-};
+  // ---------- state ----------
+  let profileName = "Guest";
+  let selectedNames = [];
+  const MAX_PICK = 10;
 
-/* ============ STATE ============ */
-let state = {
-  screen:'login',        // login | join | setup | select | generated | home
-  user:{name:'', token:'', ghUser:null, ghAvatar:null},
-  selected:[],            // array of app ids, max 10
-  sessionCode:null,
-  joinCode:'',
-  loginErr:'', joinErr:'',
-  theme:'aurora',
-  activeIndex:0,
-  ghChecking:false,
-};
+  // ---------- 20 trending apps for 2026 (stylized generic icons — not exact brand logos) ----------
+  const APPS_ALL = [
+    { name:"Instagram", url:"https://www.instagram.com", grad:["#f9a34c","#e94584","#7c3aed"], glow:"rgba(233,69,132,0.45)",
+      icon:`<rect x="4" y="4" width="40" height="40" rx="12" fill="none" stroke="#fff" stroke-width="3"/><circle cx="24" cy="24" r="10" fill="none" stroke="#fff" stroke-width="3"/><circle cx="34" cy="14" r="2.4" fill="#fff"/>` },
+    { name:"WhatsApp", url:"https://web.whatsapp.com", grad:["#25d366","#128c5e"], glow:"rgba(37,211,102,0.45)",
+      icon:`<path d="M24 6C14 6 6 14 6 24c0 3.6 1 7 2.8 9.9L6.5 42l8.4-2.2C17.6 41.5 20.7 42 24 42c10 0 18-8 18-18S34 6 24 6z" fill="none" stroke="#fff" stroke-width="3"/><path d="M17 22c1 6 5 10 11 11l3-3-4-4-2 2c-2-1-4-3-5-5l2-2-4-4-2 2z" fill="#fff"/>` },
+    { name:"TikTok", url:"https://www.tiktok.com", grad:["#111214","#1e2126"], glow:"rgba(255,255,255,0.25)",
+      icon:`<path d="M27 6v22a6 6 0 1 1-5-5.9" fill="none" stroke="#25f4ee" stroke-width="3"/><path d="M27 6c1.5 5 5 8.5 10 9" fill="none" stroke="#fe2c55" stroke-width="3"/>` },
+    { name:"Facebook", url:"https://www.facebook.com", grad:["#3b6fe0","#2148a8"], glow:"rgba(59,111,224,0.45)",
+      icon:`<path d="M28 42V26h5l1-7h-6v-4c0-2 1-3.5 3.5-3.5H34V5.3C33 5.1 30.6 5 28.1 5 23 5 20 8.1 20 13.8V19h-6v7h6v16h8z" fill="#fff"/>` },
+    { name:"YouTube", url:"https://www.youtube.com", grad:["#ff4747","#c92e2e"], glow:"rgba(255,71,71,0.45)",
+      icon:`<rect x="5" y="12" width="38" height="24" rx="8" fill="none" stroke="#fff" stroke-width="3"/><path d="M20 18l12 6-12 6z" fill="#fff"/>` },
+    { name:"Snapchat", url:"https://www.snapchat.com", grad:["#fff3b0","#ffd93d"], glow:"rgba(255,217,61,0.45)",
+      icon:`<path d="M24 6c6 0 9 5 9 10 0 3 0 5 1 7 1 1.5 3 2 3 3.5 0 1-1.5 2-4 2.4-.3 1.4-.7 2.6-2.6 2.6-1.6 0-2.4 1.2-6.4 1.2s-4.8-1.2-6.4-1.2c-1.9 0-2.3-1.2-2.6-2.6-2.5-.4-4-1.4-4-2.4 0-1.5 2-2 3-3.5 1-2 1-4 1-7 0-5 3-10 9-10z" fill="none" stroke="#3a3a3a" stroke-width="2.6"/>` },
+    { name:"X", url:"https://x.com", grad:["#0d0d0d","#2a2a2a"], glow:"rgba(255,255,255,0.3)",
+      icon:`<path d="M10 10l28 28M38 10L10 38" stroke="#fff" stroke-width="4" stroke-linecap="round"/>` },
+    { name:"Telegram", url:"https://web.telegram.org", grad:["#3aa9e0","#1f7fb8"], glow:"rgba(58,169,224,0.45)",
+      icon:`<path d="M6 24l36-14-6 32-11-8-6 6-1-10z" fill="none" stroke="#fff" stroke-width="2.6" stroke-linejoin="round"/><path d="M36 10L18 27" stroke="#fff" stroke-width="2.6"/>` },
+    { name:"Spotify", url:"https://open.spotify.com", grad:["#2ed573","#1c9c4f"], glow:"rgba(46,213,115,0.45)",
+      icon:`<circle cx="24" cy="24" r="18" fill="none" stroke="#fff" stroke-width="3"/><path d="M14 20c8-2 16-1 22 3M14 26c6-1.4 13-1 18 2M15 32c5-1 10-.6 14 1.4" stroke="#fff" stroke-width="2.6" stroke-linecap="round" fill="none"/>` },
+    { name:"Netflix", url:"https://www.netflix.com", grad:["#8b0000","#1a1a1a"], glow:"rgba(229,9,20,0.45)",
+      icon:`<path d="M14 6v36l6-2V17l14 25 4-1V6l-6 2v20L18 4z" fill="#fff"/>` },
+    { name:"Threads", url:"https://www.threads.net", grad:["#2b2b2b","#000"], glow:"rgba(255,255,255,0.25)",
+      icon:`<path d="M24 6c9 0 15 6 15 15 0 3-1 5.5-3 7.5M24 6c-9 0-15 6-15 15s6 17 15 17c6 0 10-3 12-7.5" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>` },
+    { name:"Discord", url:"https://discord.com", grad:["#5865f2","#3f47c9"], glow:"rgba(88,101,242,0.45)",
+      icon:`<rect x="6" y="14" width="36" height="22" rx="11" fill="none" stroke="#fff" stroke-width="3"/><circle cx="17" cy="25" r="2.6" fill="#fff"/><circle cx="31" cy="25" r="2.6" fill="#fff"/>` },
+    { name:"Reddit", url:"https://www.reddit.com", grad:["#ff4500","#c53600"], glow:"rgba(255,69,0,0.45)",
+      icon:`<circle cx="24" cy="26" r="12" fill="none" stroke="#fff" stroke-width="3"/><circle cx="18" cy="26" r="2" fill="#fff"/><circle cx="30" cy="26" r="2" fill="#fff"/><path d="M18 31c2 2 10 2 12 0" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round"/><circle cx="24" cy="10" r="2.4" fill="#fff"/><path d="M24 12v6" stroke="#fff" stroke-width="2.4"/>` },
+    { name:"Pinterest", url:"https://www.pinterest.com", grad:["#e60023","#a3001a"], glow:"rgba(230,0,35,0.45)",
+      icon:`<circle cx="24" cy="24" r="18" fill="none" stroke="#fff" stroke-width="3"/><path d="M20 34c2-6 3-11 4-15 2-4 8-3 8 2 0 4-2 8-6 8-1.4 0-2.3-.5-2.8-1.2M22 19c1-2 6-2 6 1" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round"/>` },
+    { name:"LinkedIn", url:"https://www.linkedin.com", grad:["#0a66c2","#084a8f"], glow:"rgba(10,102,194,0.45)",
+      icon:`<rect x="8" y="20" width="6" height="16" fill="#fff"/><circle cx="11" cy="13" r="3.4" fill="#fff"/><rect x="20" y="20" width="6" height="16" fill="#fff"/><path d="M26 26c0-4 4-6 8-4 2 1 3 3 3 6v8h-6v-7c0-1.6-1-2.6-2.4-2.6S26 27 26 28.6V36h-6V20h6z" fill="#fff"/>` },
+    { name:"CapCut", url:"https://www.capcut.com", grad:["#00d4d4","#111"], glow:"rgba(0,212,212,0.4)",
+      icon:`<rect x="6" y="10" width="36" height="28" rx="8" fill="none" stroke="#fff" stroke-width="3"/><path d="M18 20l10 6-10 6z" fill="#fff"/>` },
+    { name:"Duolingo", url:"https://www.duolingo.com", grad:["#58cc02","#2f8f00"], glow:"rgba(88,204,2,0.45)",
+      icon:`<ellipse cx="24" cy="26" rx="13" ry="12" fill="none" stroke="#fff" stroke-width="3"/><circle cx="19" cy="22" r="2" fill="#fff"/><circle cx="29" cy="22" r="2" fill="#fff"/><path d="M18 30c3 3 9 3 12 0" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round"/>` },
+    { name:"ChatGPT", url:"https://chat.openai.com", grad:["#10a37f","#0b6e57"], glow:"rgba(16,163,127,0.45)",
+      icon:`<path d="M14 30V18c0-5 4-9 9-9s9 4 9 9M14 30c0 5 4 9 9 9M14 30h18M32 30V18c0-2.4-1-4.5-2.5-6" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/><circle cx="24" cy="24" r="3.2" fill="#fff"/>` },
+    { name:"Perplexity", url:"https://www.perplexity.ai", grad:["#20808d","#12454c"], glow:"rgba(32,128,141,0.45)",
+      icon:`<circle cx="24" cy="24" r="17" fill="none" stroke="#fff" stroke-width="2.6"/><path d="M24 7v34M7 24h34M13 13l22 22M35 13L13 35" stroke="#fff" stroke-width="1.6" opacity="0.7"/><circle cx="24" cy="24" r="4" fill="#fff"/>` },
+    { name:"BeReal", url:"https://bere.al", grad:["#000","#333"], glow:"rgba(255,255,255,0.25)",
+      icon:`<rect x="6" y="14" width="20" height="20" rx="4" fill="none" stroke="#fff" stroke-width="3"/><rect x="24" y="20" width="18" height="18" rx="4" fill="#000" stroke="#fff" stroke-width="3"/>` },
+  ];
 
-const root = document.getElementById('app');
-
-/* ============ STORAGE HELPERS ============ */
-async function saveSession(code, payload){
-  try{ await window.storage.set('session:'+code, JSON.stringify(payload), true); return true; }
-  catch(e){ console.error(e); return false; }
-}
-async function loadSession(code){
-  try{
-    const res = await window.storage.get('session:'+code, true);
-    if(!res) return null;
-    return JSON.parse(res.value);
-  }catch(e){ return null; }
-}
-function genCode(){
-  const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-  let s='';
-  for(let i=0;i<6;i++) s+=chars[Math.floor(Math.random()*chars.length)];
-  return s;
-}
-
-/* ============ STARFIELD ============ */
-function initStars(){
-  const box = document.getElementById('stars');
-  let html='';
-  for(let i=0;i<60;i++){
-    const x=Math.random()*100, y=Math.random()*100, d=(Math.random()*3+2).toFixed(1), delay=(Math.random()*4).toFixed(1);
-    html+=`<span style="left:${x}%;top:${y}%;animation-duration:${d}s;animation-delay:${delay}s;"></span>`;
+  // ---------- helpers ----------
+  function $(id){ return document.getElementById(id); }
+  function showScreen(id){
+    document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+    $(id).classList.add("active");
+    window.scrollTo(0,0);
   }
-  box.innerHTML = html;
-}
-
-/* ============ RENDER DISPATCH ============ */
-function render(){
-  if(state.screen==='login') return renderLogin();
-  if(state.screen==='join') return renderJoin();
-  if(state.screen==='setup') return renderSetup();
-  if(state.screen==='select') return renderSelect();
-  if(state.screen==='generated') return renderGenerated();
-  if(state.screen==='home') return renderHome();
-}
-
-/* ============ LOGIN ============ */
-function renderLogin(){
-  root.innerHTML = `
-  <div class="center-screen">
-    <div class="panel">
-      <div class="eyebrow">Orbit Launcher</div>
-      <h1 class="title display">Sign in</h1>
-      <p class="sub">Enter your access credentials to build a custom 3D app orbit.</p>
-      <label for="lg-user">Username</label>
-      <input type="text" id="lg-user" placeholder="code-x" autocomplete="off">
-      <label for="lg-pass">Password</label>
-      <input type="password" id="lg-pass" placeholder="••••">
-      <div class="error-msg ${state.loginErr?'show':''}" id="lg-err">${state.loginErr||''}</div>
-      <div style="margin-top:22px;">
-        <button class="btn btn-primary" id="lg-submit">Enter Orbit →</button>
-      </div>
-      <p class="hint">Have a share code from someone else's link? <span class="switch-link" id="go-join">Join their session</span></p>
-    </div>
-  </div>`;
-  document.getElementById('lg-submit').onclick = doLogin;
-  document.getElementById('lg-pass').addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
-  document.getElementById('go-join').onclick = ()=>{ state.screen='join'; render(); };
-}
-function doLogin(){
-  const u = document.getElementById('lg-user').value.trim();
-  const p = document.getElementById('lg-pass').value.trim();
-  if(u==='code-x' && p==='1234'){
-    state.loginErr='';
-    state.screen='setup';
-    render();
-  }else{
-    state.loginErr='Incorrect username or password.';
-    render();
+  function toast(msg){
+    const t = $("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    setTimeout(()=> t.classList.remove("show"), 2200);
   }
-}
-
-/* ============ JOIN (load a shared session code on this device) ============ */
-function renderJoin(){
-  root.innerHTML = `
-  <div class="center-screen">
-    <div class="panel">
-      <div class="eyebrow">Join Session</div>
-      <h1 class="title display">Enter share code</h1>
-      <p class="sub">Type the 6-character code shown on the device that generated the orbit.</p>
-      <label for="jn-code">Share code</label>
-      <input type="text" id="jn-code" placeholder="e.g. K4T9XQ" style="text-transform:uppercase;letter-spacing:.12em;font-family:'Space Grotesk',sans-serif;">
-      <div class="error-msg ${state.joinErr?'show':''}" id="jn-err">${state.joinErr||''}</div>
-      <div style="margin-top:22px;display:flex;flex-direction:column;gap:10px;">
-        <button class="btn btn-primary" id="jn-submit">Load Orbit →</button>
-        <button class="btn btn-ghost" id="jn-back">Back to sign in</button>
-      </div>
-    </div>
-  </div>`;
-  document.getElementById('jn-submit').onclick = doJoin;
-  document.getElementById('jn-back').onclick = ()=>{ state.screen='login'; render(); };
-}
-async function doJoin(){
-  const code = document.getElementById('jn-code').value.trim().toUpperCase();
-  if(!code){ state.joinErr='Enter a code first.'; render(); return; }
-  const btn = document.getElementById('jn-submit');
-  btn.textContent='Loading...'; btn.disabled=true;
-  const data = await loadSession(code);
-  if(!data){
-    state.joinErr='No orbit found for that code. Check it and try again.';
-    render();
-    return;
+  function genCode(){
+    const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+    let c = "";
+    for(let i=0;i<8;i++) c += chars[Math.floor(Math.random()*chars.length)];
+    return c;
   }
-  state.user.name = data.name || 'Guest';
-  state.selected = data.apps || [];
-  state.sessionCode = code;
-  state.joinErr='';
-  state.screen='home';
-  render();
-}
-
-/* ============ SETUP (name + github token) ============ */
-function renderSetup(){
-  root.innerHTML = `
-  <div class="center-screen">
-    <div class="panel">
-      <div class="eyebrow">Step 1 of 2</div>
-      <h1 class="title display">Set up your profile</h1>
-      <p class="sub">Your name personalizes the orbit. Your GitHub token is used only to verify your identity in this browser session — it's never sent anywhere except GitHub's own API, and isn't stored after you close this tab.</p>
-      <label for="su-name">Your name</label>
-      <input type="text" id="su-name" placeholder="e.g. Arjun" value="${state.user.name||''}">
-      <label for="su-token">GitHub personal access token <span style="color:var(--muted);font-weight:400;">(optional)</span></label>
-      <input type="password" id="su-token" placeholder="ghp_..." value="${state.user.token||''}">
-      <div class="status-line" id="su-status"></div>
-      <div style="margin-top:22px;">
-        <button class="btn btn-primary" id="su-submit">Continue →</button>
-      </div>
-    </div>
-  </div>`;
-  document.getElementById('su-submit').onclick = doSetup;
-}
-async function doSetup(){
-  const name = document.getElementById('su-name').value.trim();
-  const token = document.getElementById('su-token').value.trim();
-  const statusEl = document.getElementById('su-status');
-  if(!name){
-    statusEl.innerHTML = `<span style="color:#fca5a5;">Please enter your name.</span>`;
-    return;
+  async function storageSet(key, value){
+    try{ return await window.storage.set(key, value, true); }
+    catch(e){ console.error("storage set failed", e); return null; }
   }
-  state.user.name = name;
-  state.user.token = token;
+  async function storageGet(key){
+    try{ return await window.storage.get(key, true); }
+    catch(e){ return null; }
+  }
+  function findApp(name){ return APPS_ALL.find(a => a.name === name); }
 
-  if(token){
-    statusEl.innerHTML = `<div class="spinner"></div> Verifying token with GitHub...`;
-    try{
-      const res = await fetch('https://api.github.com/user', { headers:{ 'Authorization':'Bearer '+token, 'Accept':'application/vnd.github+json' } });
-      if(res.ok){
-        const j = await res.json();
-        state.user.ghUser = j.login;
-        state.user.ghAvatar = j.avatar_url;
-        statusEl.innerHTML = `<span class="gh-ok">✓ Connected as ${j.login}</span>`;
-      }else{
-        statusEl.innerHTML = `<span style="color:#fca5a5;">Token couldn't be verified — continuing without GitHub link.</span>`;
-      }
-    }catch(e){
-      statusEl.innerHTML = `<span style="color:#fca5a5;">Couldn't reach GitHub from here — continuing without GitHub link.</span>`;
+  // ---------- login ----------
+  $("login-btn").addEventListener("click", () => {
+    const u = $("login-user").value.trim();
+    const p = $("login-pass").value;
+    const err = $("login-error");
+    if(u === "code-x" && p === "12345"){
+      err.style.display = "none";
+      showScreen("screen-profile");
+    } else {
+      err.style.display = "block";
+      const card = document.querySelector("#screen-login .card");
+      card.classList.remove("shake");
+      void card.offsetWidth;
+      card.classList.add("shake");
     }
+  });
+  ["login-user","login-pass"].forEach(id=>{
+    $(id).addEventListener("keydown", e => { if(e.key === "Enter") $("login-btn").click(); });
+  });
+
+  // ---------- profile ----------
+  $("generate-btn").addEventListener("click", () => {
+    const name = $("profile-name").value.trim();
+    const err = $("profile-error");
+    if(!name){ err.style.display = "block"; return; }
+    err.style.display = "none";
+    profileName = name;
+    selectedNames = APPS_ALL.slice(0, MAX_PICK).map(a => a.name); // sensible default
+    openPicker(true);
+  });
+
+  // ---------- picker (edit) ----------
+  const pickerGrid = $("picker-grid");
+  let cameFromProfile = false;
+
+  function openPicker(fromProfile){
+    cameFromProfile = !!fromProfile;
+    renderPicker();
+    showScreen("screen-picker");
   }
-  setTimeout(()=>{ state.screen='select'; render(); }, token ? 700 : 0);
-}
 
-/* ============ SELECT (pick 10 apps) ============ */
-function renderSelect(){
-  const wrap = document.createElement('div');
-  wrap.className='select-wrap';
-  let head = `
-    <div class="select-head">
-      <div>
-        <div class="eyebrow">Step 2 of 2</div>
-        <h1 class="display">Build your orbit, ${escapeHtml(state.user.name)}</h1>
-      </div>
-      <div class="counter ${state.selected.length===10?'full':''}">${state.selected.length} / 10 selected</div>
-    </div>`;
-  let body='';
-  CATS.forEach(cat=>{
-    body += `<div class="cat-label">${cat}</div><div class="grid">`;
-    APPS.filter(a=>a.cat===cat).forEach(a=>{
-      const picked = state.selected.includes(a.id);
-      const disabled = !picked && state.selected.length>=10;
-      body += `
-        <div class="app-card ${picked?'picked':''} ${disabled?'disabled':''}" data-id="${a.id}">
-          <div class="pick-badge">${picked?'✓':''}</div>
-          <div class="app-logo" style="background:linear-gradient(135deg, ${a.c1}, ${a.c2});">${a.letter}</div>
-          <div class="app-name">${a.name}</div>
-          <div class="app-cat">${a.cat.split(' ')[0]}</div>
-        </div>`;
+  function renderPicker(){
+    pickerGrid.innerHTML = "";
+    APPS_ALL.forEach(app => {
+      const isSel = selectedNames.includes(app.name);
+      const el = document.createElement("div");
+      el.className = "pick-card" + (isSel ? " selected" : "");
+      el.innerHTML = `
+        <div class="pick-check">✓</div>
+        <div class="pick-icon" style="background:linear-gradient(135deg, ${app.grad[0]}, ${app.grad[app.grad.length-1]})">
+          <svg viewBox="0 0 48 48">${app.icon}</svg>
+        </div>
+        <div class="pick-name">${app.name}</div>`;
+      el.addEventListener("click", () => toggleSelect(app.name, el));
+      pickerGrid.appendChild(el);
     });
-    body += `</div>`;
-  });
-  wrap.innerHTML = head + body;
-  root.innerHTML='';
-  root.appendChild(wrap);
+    updateCounter();
+  }
 
-  const dock = document.createElement('div');
-  dock.className='dock';
-  dock.innerHTML = `<div class="dock-inner">
-      <button class="btn btn-primary" id="gen-btn" ${state.selected.length!==10?'disabled':''}>
-        ${state.selected.length===10 ? 'Generate Orbit Link →' : `Select ${10-state.selected.length} more to continue`}
-      </button>
-    </div>`;
-  root.appendChild(dock);
-
-  root.querySelectorAll('.app-card').forEach(card=>{
-    card.addEventListener('click', ()=>{
-      const id = card.getAttribute('data-id');
-      const idx = state.selected.indexOf(id);
-      if(idx>=0){ state.selected.splice(idx,1); }
-      else if(state.selected.length<10){ state.selected.push(id); }
-      render();
-    });
-  });
-  const genBtn = document.getElementById('gen-btn');
-  if(genBtn) genBtn.onclick = doGenerate;
-}
-
-async function doGenerate(){
-  const btn = document.getElementById('gen-btn');
-  btn.disabled=true; btn.textContent='Generating...';
-  const code = genCode();
-  const ok = await saveSession(code, {name:state.user.name, apps:state.selected, createdAt:Date.now()});
-  state.sessionCode = ok ? code : null;
-  state.screen='generated';
-  render();
-}
-
-/* ============ GENERATED / SHARE SCREEN ============ */
-function renderGenerated(){
-  root.innerHTML = `
-  <div class="center-screen">
-    <div class="panel">
-      <div class="eyebrow">Orbit Ready</div>
-      <h1 class="title display">Your share code</h1>
-      <p class="sub">Open this same Orbit Launcher link on another phone, tap <b>Join their session</b>, and enter this code to load your exact 10-app orbit there too.</p>
-      <div class="code-box">${state.sessionCode || '— unavailable —'}</div>
-      <ul class="step-list">
-        <li><span class="step-num">1</span> Share this artifact's link with the other phone.</li>
-        <li><span class="step-num">2</span> On that phone, choose "Join their session" from the sign-in screen.</li>
-        <li><span class="step-num">3</span> Enter <b>${state.sessionCode||'the code'}</b> — your selected apps load instantly.</li>
-      </ul>
-      <button class="btn btn-primary" id="go-home">Enter My Orbit →</button>
-    </div>
-  </div>`;
-  document.getElementById('go-home').onclick = ()=>{ state.screen='home'; state.activeIndex=0; render(); };
-}
-
-/* ============ HOME / 3D CAROUSEL ============ */
-function getSelectedApps(){
-  return state.selected.map(id=>APPS.find(a=>a.id===id)).filter(Boolean);
-}
-
-function renderHome(){
-  const apps = getSelectedApps();
-  const th = THEMES[state.theme];
-  document.body.style.background = th.bg;
-  document.documentElement.style.setProperty('--aurora1', th.a1);
-  document.documentElement.style.setProperty('--aurora2', th.a2);
-
-  const chips = Object.keys(THEMES).map(k=>{
-    const t = THEMES[k];
-    const active = k===state.theme;
-    return `<div class="theme-chip ${active?'active':''}" data-theme="${k}" style="${active?`background:linear-gradient(135deg, ${t.a1}, ${t.a2});`:''}">${t.label}</div>`;
-  }).join('');
-
-  root.innerHTML = `
-    <div class="home">
-      <div class="home-top">
-        <div class="home-brand"><span class="dot"></span><span class="display">Orbit · ${escapeHtml(state.user.name)}</span></div>
-        <div class="icon-btn" id="share-btn" title="Share this orbit">⇪</div>
-      </div>
-      <div class="theme-strip" id="theme-strip">${chips}</div>
-      <div class="stage" id="stage">
-        <div class="stage-inner" id="stage-inner"></div>
-      </div>
-      <div class="hud-bottom">
-        <div class="hud-name display" id="hud-name">—</div>
-        <div class="hud-sub" id="hud-sub">Scroll or swipe to browse · tap the glowing app to launch</div>
-        <div class="progress-dots" id="dots"></div>
-      </div>
-    </div>
-    <div class="toast" id="toast"></div>
-  `;
-
-  document.getElementById('share-btn').onclick = ()=>{
-    if(!state.sessionCode){ showToast('No share code yet for this orbit.'); return; }
-    showToast('Share code: '+state.sessionCode);
-  };
-  root.querySelectorAll('.theme-chip').forEach(chip=>{
-    chip.addEventListener('click', ()=>{
-      state.theme = chip.getAttribute('data-theme');
-      render();
-    });
-  });
-
-  layoutCarousel(apps);
-  wireCarouselInput(apps);
-}
-
-function showToast(msg){
-  const t = document.getElementById('toast');
-  if(!t) return;
-  t.textContent = msg;
-  t.classList.add('show');
-  clearTimeout(t._timer);
-  t._timer = setTimeout(()=>t.classList.remove('show'), 2200);
-}
-
-/* Position tiles according to theme + activeIndex */
-function layoutCarousel(apps){
-  const inner = document.getElementById('stage-inner');
-  if(!inner) return;
-  inner.innerHTML = apps.map((a,i)=>`
-    <div class="app-tile" data-idx="${i}" data-id="${a.id}">
-      <div class="tile-face" style="background:linear-gradient(160deg, rgba(255,255,255,0.10), rgba(255,255,255,0.02));">
-        <div class="glyph" style="background:linear-gradient(135deg, ${a.c1}, ${a.c2});">${a.letter}</div>
-        <div class="tname">${a.name}</div>
-      </div>
-    </div>`).join('');
-
-  updateCarouselTransforms(apps);
-
-  inner.querySelectorAll('.app-tile').forEach(tile=>{
-    tile.addEventListener('click', ()=>{
-      const idx = parseInt(tile.getAttribute('data-idx'),10);
-      if(idx === state.activeIndex){
-        launchApp(apps[idx]);
-      }else{
-        state.activeIndex = idx;
-        updateCarouselTransforms(apps);
-        updateHud(apps);
+  function toggleSelect(name, el){
+    const idx = selectedNames.indexOf(name);
+    if(idx > -1){
+      selectedNames.splice(idx, 1);
+      el.classList.remove("selected");
+    } else {
+      if(selectedNames.length >= MAX_PICK){
+        toast("You can select up to 10 apps");
+        return;
       }
-    });
-  });
-  updateHud(apps);
-}
-
-function updateHud(apps){
-  const a = apps[state.activeIndex];
-  const nameEl = document.getElementById('hud-name');
-  const dotsEl = document.getElementById('dots');
-  if(nameEl) nameEl.textContent = a ? a.name : '—';
-  if(dotsEl){
-    dotsEl.innerHTML = apps.map((_,i)=>`<span class="${i===state.activeIndex?'on':''}"></span>`).join('');
-  }
-}
-
-function updateCarouselTransforms(apps){
-  const n = apps.length;
-  const active = state.activeIndex;
-  const tiles = document.querySelectorAll('.app-tile');
-  tiles.forEach(tile=>{
-    const i = parseInt(tile.getAttribute('data-idx'),10);
-    let offset = i - active;
-    // wrap offset to shortest path for ring-style themes
-    if(offset > n/2) offset -= n;
-    if(offset < -n/2) offset += n;
-    const abs = Math.abs(offset);
-    let transform = '', opacity = 1, z = 10-abs;
-
-    if(state.theme==='aurora'){
-      const angle = offset * 32;
-      const radius = 260;
-      transform = `rotateY(${angle}deg) translateZ(${radius}px) rotateY(${-angle}deg) scale(${offset===0?1.28:0.82})`;
-      opacity = abs>3 ? 0 : (1 - abs*0.22);
-    } else if(state.theme==='coverflow'){
-      const x = offset*100;
-      const rot = offset===0?0:(offset>0?-45:45);
-      const tz = offset===0?40:-80;
-      transform = `translateX(${x}px) translateZ(${tz}px) rotateY(${rot}deg) scale(${offset===0?1.25:0.85})`;
-      opacity = abs>4 ? 0 : (1 - abs*0.16);
-    } else if(state.theme==='cascade'){
-      const y = offset*26;
-      const x = offset*14;
-      const tz = -abs*60;
-      transform = `translate(${x}px, ${y}px) translateZ(${tz}px) rotate(${offset*3}deg) scale(${offset===0?1.3:0.88})`;
-      opacity = abs>5 ? 0 : (1 - abs*0.14);
-    } else if(state.theme==='cube'){
-      const angle = offset * (360/Math.max(n,6));
-      const radius = 240;
-      transform = `rotateY(${angle}deg) translateZ(${radius}px) rotateY(${-angle}deg) scale(${offset===0?1.3:0.75})`;
-      opacity = abs>3 ? 0.05 : (1 - abs*0.25);
-    } else if(state.theme==='fan'){
-      const angle = offset * 16;
-      const x = offset*70;
-      const y = abs*abs*6;
-      transform = `translate(${x}px, ${y}px) rotate(${angle}deg) scale(${offset===0?1.3:0.86})`;
-      opacity = abs>4 ? 0 : (1 - abs*0.18);
+      selectedNames.push(name);
+      el.classList.add("selected");
     }
+    updateCounter();
+  }
 
-    tile.style.transform = transform;
-    tile.style.opacity = opacity;
-    tile.style.zIndex = z;
-    tile.classList.toggle('active', offset===0);
+  function updateCounter(){
+    $("picker-counter").textContent = selectedNames.length + " / " + MAX_PICK;
+  }
+
+  $("picker-back-btn").addEventListener("click", () => {
+    if(cameFromProfile){ showScreen("screen-profile"); }
+    else{ renderStore(); showScreen("screen-home"); }
   });
-}
 
-function wireCarouselInput(apps){
-  const stage = document.getElementById('stage');
-  if(!stage) return;
-  let wheelLock = false;
-  stage.addEventListener('wheel', (e)=>{
+  $("save-selection-btn").addEventListener("click", async () => {
+    if(selectedNames.length === 0){
+      toast("Pick at least 1 app to continue");
+      return;
+    }
+    if(cameFromProfile){
+      const code = genCode();
+      await storageSet("profile:" + code, JSON.stringify({ name: profileName, apps: selectedNames }));
+      const url = new URL(window.location.href);
+      url.searchParams.set("code", code);
+      $("share-link").value = url.toString();
+      showScreen("screen-generate");
+    } else {
+      renderStore();
+      showScreen("screen-home");
+      toast("Selection updated");
+    }
+  });
+
+  $("edit-btn").addEventListener("click", () => openPicker(false));
+
+  $("copy-link-btn").addEventListener("click", () => {
+    $("share-link").select();
+    navigator.clipboard?.writeText($("share-link").value).then(()=> toast("Link copied"))
+      .catch(()=> toast("Select the text and copy manually"));
+  });
+  $("continue-btn").addEventListener("click", () => { renderStore(); showScreen("screen-home"); });
+
+  // ---------- pro themes: each pairs a color palette with its own 3D transition ----------
+  const THEMES = [
+    { id:"nebula",   name:"Nebula",   swatch:"linear-gradient(135deg,#7c5cfc,#26d3b0)", anim:"zoom",  tag:"Zoom Blur" },
+    { id:"aurora",   name:"Aurora",   swatch:"linear-gradient(135deg,#22c55e,#06b6d4)", anim:"cube",  tag:"Cube Spin" },
+    { id:"sunset",   name:"Sunset",   swatch:"linear-gradient(135deg,#fb7185,#facc15)", anim:"flip",  tag:"Flip Card" },
+    { id:"midnight", name:"Midnight", swatch:"linear-gradient(135deg,#6366f1,#22d3ee)", anim:"slide", tag:"Coverflow" },
+    { id:"chrome",   name:"Chrome",   swatch:"linear-gradient(135deg,#94a3b8,#38bdf8)", anim:"orbit", tag:"Orbit Spin" },
+  ];
+  let activeTheme = THEMES[0];
+
+  function buildThemeRow(){
+    const row = $("theme-row");
+    row.querySelectorAll(".theme-swatch").forEach(el => el.remove());
+    THEMES.forEach(t => {
+      const el = document.createElement("div");
+      el.className = "theme-swatch" + (t.id === activeTheme.id ? " active" : "");
+      el.style.background = t.swatch;
+      el.title = t.name;
+      el.innerHTML = `<span class="anim-tag">${t.tag}</span>`;
+      el.addEventListener("click", () => {
+        activeTheme = t;
+        document.body.setAttribute("data-theme", t.id);
+        row.querySelectorAll(".theme-swatch").forEach(s => s.classList.remove("active"));
+        el.classList.add("active");
+        toast(t.name + " theme · " + t.tag);
+      });
+      row.appendChild(el);
+    });
+  }
+
+  // ---------- spotlight (click to open, scroll/swipe to zoom-cycle) ----------
+  let spotlightIndex = 0;
+  let spotlightBusy = false;
+
+  function currentSpotlightApps(){
+    return selectedNames.map(findApp).filter(Boolean);
+  }
+
+  function renderSpotlight(){
+    const apps = currentSpotlightApps();
+    const wrap = $("spotlight-wrap");
+    if(!apps.length){
+      wrap.style.display = "none";
+      return;
+    }
+    wrap.style.display = "flex";
+    if(spotlightIndex >= apps.length) spotlightIndex = 0;
+    paintSpotlight(apps[spotlightIndex]);
+    renderDots(apps);
+  }
+
+  function paintSpotlight(app){
+    const iconEl = $("spotlight-icon");
+    iconEl.style.background = `linear-gradient(135deg, ${app.grad[0]}, ${app.grad[app.grad.length-1]})`;
+    iconEl.innerHTML = `<svg viewBox="0 0 48 48">${app.icon}</svg>`;
+    iconEl.style.boxShadow = `0 30px 70px ${app.glow}`;
+    $("spotlight-name").textContent = app.name;
+  }
+
+  function renderDots(apps){
+    const dotsEl = $("spotlight-dots");
+    dotsEl.innerHTML = "";
+    apps.forEach((_, i) => {
+      const d = document.createElement("div");
+      d.className = "spotlight-dot" + (i === spotlightIndex ? " active" : "");
+      dotsEl.appendChild(d);
+    });
+  }
+
+  function spotlightCycle(dir){
+    const apps = currentSpotlightApps();
+    if(apps.length < 2 || spotlightBusy) return;
+    spotlightBusy = true;
+    const iconEl = $("spotlight-icon");
+    const nameEl = $("spotlight-name");
+    const anim = activeTheme.anim; // zoom | cube | flip | slide | orbit
+    const outClass = anim + "-out";
+    const inClass = anim + "-in-start";
+
+    iconEl.classList.add(outClass);
+    nameEl.style.opacity = 0;
+
+    setTimeout(() => {
+      spotlightIndex = (spotlightIndex + dir + apps.length) % apps.length;
+      const app = apps[spotlightIndex];
+      iconEl.classList.remove(outClass);
+      iconEl.classList.add(inClass);
+      paintSpotlight(app);
+      renderDots(apps);
+      // force reflow so the browser registers the start state before transitioning
+      void iconEl.offsetWidth;
+      iconEl.classList.remove(inClass);
+      nameEl.style.opacity = 1;
+      setTimeout(() => { spotlightBusy = false; }, 340);
+    }, 260);
+  }
+
+  const spotlightStage = $("spotlight-stage");
+  spotlightStage.addEventListener("click", () => {
+    const apps = currentSpotlightApps();
+    if(!apps.length) return;
+    const app = apps[spotlightIndex];
+    window.open(app.url, "_blank", "noopener,noreferrer");
+    toast("Opening " + app.name + " …");
+  });
+
+  let spotlightWheelLock = false;
+  spotlightStage.addEventListener("wheel", (e) => {
     e.preventDefault();
-    if(wheelLock) return;
-    wheelLock = true;
-    setTimeout(()=>wheelLock=false, 260);
-    const dir = e.deltaY > 0 ? 1 : -1;
-    step(dir, apps);
-  }, {passive:false});
+    if(spotlightWheelLock) return;
+    spotlightWheelLock = true;
+    spotlightCycle(e.deltaY > 0 ? 1 : -1);
+    setTimeout(()=> spotlightWheelLock = false, 320);
+  }, { passive:false });
 
-  let startX=0, startY=0, dragging=false;
-  stage.addEventListener('touchstart', e=>{
-    startX = e.touches[0].clientX; startY = e.touches[0].clientY; dragging=true;
-  }, {passive:true});
-  stage.addEventListener('touchend', e=>{
-    if(!dragging) return; dragging=false;
-    const dx = e.changedTouches[0].clientX - startX;
-    const dy = e.changedTouches[0].clientY - startY;
-    if(Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 40){
-      step(dx<0?1:-1, apps);
-    } else if(Math.abs(dy) > 40){
-      step(dy<0?1:-1, apps);
+  let spotlightTouchX = null;
+  spotlightStage.addEventListener("touchstart", (e) => { spotlightTouchX = e.touches[0].clientX; }, { passive:true });
+  spotlightStage.addEventListener("touchend", (e) => {
+    if(spotlightTouchX === null) return;
+    const dx = e.changedTouches[0].clientX - spotlightTouchX;
+    if(Math.abs(dx) > 40) spotlightCycle(dx < 0 ? 1 : -1);
+    spotlightTouchX = null;
+  }, { passive:true });
+
+  // ---------- app store home ----------
+  function renderStore(){
+    $("home-title").textContent = profileName;
+    document.body.setAttribute("data-theme", activeTheme.id);
+    buildThemeRow();
+    spotlightIndex = 0;
+    renderSpotlight();
+    const apps = selectedNames.map(findApp).filter(Boolean);
+    $("empty-state").style.display = apps.length ? "none" : "block";
+    $("spotlight-wrap").style.display = apps.length ? "flex" : "none";
+  }
+
+  // ---------- entry ----------
+  function enterHome(name, apps){
+    profileName = name || "Guest";
+    selectedNames = Array.isArray(apps) && apps.length ? apps.filter(n => findApp(n)) : [];
+    renderStore();
+    showScreen("screen-home");
+  }
+
+  async function init(){
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get("code");
+    if(code){
+      const rec = await storageGet("profile:" + code.toUpperCase());
+      if(rec && rec.value){
+        try{
+          const data = JSON.parse(rec.value);
+          enterHome(data.name, data.apps);
+          return;
+        }catch(e){}
+      }
+      toast("This link's data couldn't be found — sign in to create a new one");
     }
-  }, {passive:true});
+    showScreen("screen-login");
+  }
 
-  document.addEventListener('keydown', (e)=>{
-    if(state.screen!=='home') return;
-    if(e.key==='ArrowRight' || e.key==='ArrowDown') step(1, apps);
-    if(e.key==='ArrowLeft' || e.key==='ArrowUp') step(-1, apps);
-    if(e.key==='Enter') launchApp(apps[state.activeIndex]);
-  });
-}
-
-function step(dir, apps){
-  const n = apps.length;
-  state.activeIndex = (state.activeIndex + dir + n) % n;
-  updateCarouselTransforms(apps);
-  updateHud(apps);
-}
-
-function launchApp(app){
-  if(!app) return;
-  showToast('Opening '+app.name+'…');
-  const start = Date.now();
-  // Attempt native app deep link; fall back to web if the app isn't installed.
-  const iframe = document.createElement('iframe');
-  iframe.style.display='none';
-  document.body.appendChild(iframe);
-  try{ iframe.src = app.scheme; }catch(e){}
-  window.location.href = app.scheme;
-  setTimeout(()=>{
-    document.body.removeChild(iframe);
-    if(Date.now() - start < 2000){
-      window.open(app.web, '_blank');
-    }
-  }, 900);
-}
-
-/* ============ UTIL ============ */
-function escapeHtml(s){
-  return (s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-}
-
-/* ============ INIT ============ */
-initStars();
-render();
+  init();
+})();
 </script>
 </body>
 </html>

@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -36,11 +37,11 @@
   .orb1{width:420px;height:420px;background:var(--accent1); top:-120px; left:-100px;}
   .orb2{width:360px;height:360px;background:var(--accent2); bottom:-140px; right:-80px;}
   .orb3{width:260px;height:260px;background:var(--accent3); top:40%; left:60%; opacity:0.15;}
-
+ 
   .screen{position:relative; z-index:1; min-height:100vh; display:none; align-items:center; justify-content:center; flex-direction:column; padding:24px;}
   .screen.active{display:flex;}
   .screen.top-align{justify-content:flex-start;}
-
+ 
   .card{
     position:relative; z-index:2; width:100%; max-width:380px;
     background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
@@ -50,7 +51,7 @@
     animation:cardIn 0.6s cubic-bezier(.16,1,.3,1);
   }
   @keyframes cardIn{ from{opacity:0; transform:translateY(24px) scale(0.97);} to{opacity:1; transform:translateY(0) scale(1);} }
-
+ 
   .eyebrow{font-family:var(--font-mono); font-size:12px; letter-spacing:0.14em; text-transform:uppercase; color:var(--accent2); margin-bottom:10px; display:flex; align-items:center; gap:8px;}
   .eyebrow::before{content:""; width:6px;height:6px;border-radius:50%; background:var(--accent2); box-shadow:0 0 8px var(--accent2);}
   h1.title{font-family:var(--font-display); font-size:28px; font-weight:700; line-height:1.15; margin-bottom:6px; letter-spacing:-0.01em;}
@@ -69,13 +70,13 @@
   .error-msg{color:var(--danger); font-size:12.5px; margin-top:-6px; margin-bottom:14px; display:none;}
   .shake{animation:shake 0.4s;}
   @keyframes shake{ 10%,90%{transform:translateX(-1px);} 20%,80%{transform:translateX(2px);} 30%,50%,70%{transform:translateX(-6px);} 40%,60%{transform:translateX(6px);} }
-
+ 
   .link-box{display:flex; gap:8px; margin-bottom:18px;}
   .link-box input{flex:1; font-size:12px; padding:10px 12px; background:rgba(255,255,255,0.03); border:1px solid var(--card-border); border-radius:10px; color:var(--muted); font-family:var(--font-mono);}
   .copy-btn{padding:10px 14px; border-radius:10px; border:1px solid var(--card-border); background:rgba(255,255,255,0.03); color:var(--text); font-size:12px; cursor:pointer; white-space:nowrap;}
   .copy-btn:hover{border-color:var(--accent2); color:var(--accent2);}
   .note{font-size:12px; color:var(--muted); line-height:1.6; background:rgba(255,255,255,0.02); border-left:2px solid var(--accent1); padding:10px 12px; border-radius:6px; margin-bottom:20px;}
-
+ 
   /* ---------- HOME / APP STORE ---------- */
   #screen-home{padding:0;}
   .home-topbar{
@@ -95,7 +96,7 @@
   }
   .edit-btn:hover{border-color:var(--accent1); background:rgba(124,92,252,0.08);}
   .edit-btn svg{width:15px;height:15px;}
-
+ 
   /* ---------- SPOTLIGHT (click to open, scroll to zoom-cycle) ---------- */
   .spotlight-wrap{
     max-width:900px; margin:0 auto; padding:34px 22px 10px;
@@ -116,16 +117,16 @@
   .spotlight-icon svg{width:56%;height:56%;}
   .spotlight-icon.zoom-out{transform:scale(2.2); opacity:0; filter:blur(6px);}
   .spotlight-icon.zoom-in-start{transform:scale(0.3); opacity:0; filter:blur(6px);}
-
+ 
   .spotlight-icon.cube-out{transform:rotateY(105deg) scale(0.7); opacity:0;}
   .spotlight-icon.cube-in-start{transform:rotateY(-105deg) scale(0.7); opacity:0;}
-
+ 
   .spotlight-icon.flip-out{transform:rotateX(115deg) scale(0.7); opacity:0;}
   .spotlight-icon.flip-in-start{transform:rotateX(-115deg) scale(0.7); opacity:0;}
-
+ 
   .spotlight-icon.slide-out{transform:translateX(-150px) scale(0.5) rotateZ(-14deg); opacity:0;}
   .spotlight-icon.slide-in-start{transform:translateX(150px) scale(0.5) rotateZ(14deg); opacity:0;}
-
+ 
   .spotlight-icon.orbit-out{transform:rotate(300deg) scale(0.18); opacity:0;}
   .spotlight-icon.orbit-in-start{transform:rotate(-300deg) scale(0.18); opacity:0;}
   .spotlight-name{
@@ -139,13 +140,13 @@
   .spotlight-dots{display:flex; gap:6px; margin-top:16px; flex-wrap:wrap; justify-content:center; max-width:280px;}
   .spotlight-dot{width:6px;height:6px;border-radius:50%; background:var(--card-border); transition:background 0.2s, transform 0.2s;}
   .spotlight-dot.active{background:var(--accent2); transform:scale(1.5);}
-
+ 
   body[data-theme="nebula"]{ --accent1:#7c5cfc; --accent2:#26d3b0; --accent3:#ff5d73; }
   body[data-theme="aurora"]{ --accent1:#22c55e; --accent2:#06b6d4; --accent3:#a855f7; }
   body[data-theme="sunset"]{ --accent1:#fb7185; --accent2:#f97316; --accent3:#facc15; }
   body[data-theme="midnight"]{ --accent1:#6366f1; --accent2:#8b5cf6; --accent3:#22d3ee; }
   body[data-theme="chrome"]{ --accent1:#94a3b8; --accent2:#e2e8f0; --accent3:#38bdf8; }
-
+ 
   .theme-row{
     display:flex; align-items:center; gap:14px; justify-content:center;
     margin:4px 0 26px; flex-wrap:wrap;
@@ -166,13 +167,13 @@
     transition:opacity 0.2s ease; pointer-events:none;
   }
   .theme-swatch.active .anim-tag{opacity:1;}
-
-
+ 
+ 
   .empty-state{
     max-width:420px; margin:60px auto; text-align:center; color:var(--muted); padding:0 20px;
   }
   .empty-state h2{font-family:var(--font-display); color:var(--text); margin-bottom:10px; font-size:20px;}
-
+ 
   /* ---------- PICKER (EDIT) SCREEN ---------- */
   #screen-picker{padding:0;}
   .picker-topbar{
@@ -216,7 +217,7 @@
     position:sticky; bottom:0; padding:16px 22px 24px; background:linear-gradient(0deg, var(--bg) 60%, transparent);
   }
   .picker-footer .btn{max-width:900px; margin:0 auto;}
-
+ 
   .toast{
     position:fixed; bottom:26px; left:50%; transform:translateX(-50%) translateY(20px);
     background:var(--card); border:1px solid var(--card-border); color:var(--text);
@@ -224,18 +225,18 @@
     transition:opacity 0.25s, transform 0.25s; z-index:50;
   }
   .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
-
+ 
   @media (prefers-reduced-motion: reduce){ *{animation-duration:0.001ms !important; transition-duration:0.001ms !important;} }
   ::selection{background:var(--accent1); color:#fff;}
 </style>
 </head>
 <body>
-
+ 
 <div id="stage">
   <div class="orb orb1"></div>
   <div class="orb orb2"></div>
   <div class="orb orb3"></div>
-
+ 
   <!-- LOGIN -->
   <div class="screen active" id="screen-login">
     <div class="card">
@@ -248,7 +249,7 @@
       <button class="btn btn-primary" id="login-btn">Sign in</button>
     </div>
   </div>
-
+ 
   <!-- PROFILE -->
   <div class="screen" id="screen-profile">
     <div class="card">
@@ -265,7 +266,7 @@
       <button class="btn btn-primary" id="generate-btn">Continue to app picker</button>
     </div>
   </div>
-
+ 
   <!-- GENERATE / SHARE (shown after picking apps) -->
   <div class="screen" id="screen-generate">
     <div class="card">
@@ -273,11 +274,11 @@
       <h1 class="title">Your link is ready</h1>
       <p class="sub">Send this link to anyone — opening it on any phone or computer drops them straight onto your app store page.</p>
       <div class="link-box"><input type="text" id="share-link" readonly><button class="copy-btn" id="copy-link-btn">Copy</button></div>
-      <div class="note">The link carries your name and your 10 chosen apps. You can still tap "Edit" later to change the selection.</div>
+      <div class="note">Everything — your name, your 10 apps, and your theme — is encoded directly into this link, so it works anywhere you host this page (including GitHub Pages), with no server or database needed. If you edit your selection or theme afterward, copy the link again to share the updated version.</div>
       <button class="btn btn-primary" id="continue-btn">View my app store</button>
     </div>
   </div>
-
+ 
   <!-- HOME / APP STORE -->
   <div class="screen top-align" id="screen-home">
     <div class="home-topbar">
@@ -285,10 +286,16 @@
         <div class="eyebrow">Welcome</div>
         <h1 id="home-title">-name-</h1>
       </div>
-      <button class="edit-btn" id="edit-btn">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
-        Edit
-      </button>
+      <div style="display:flex; gap:8px;">
+        <button class="edit-btn" id="share-again-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 10.5l6.8-3.9M8.6 13.5l6.8 3.9"/></svg>
+          Share
+        </button>
+        <button class="edit-btn" id="edit-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+          Edit
+        </button>
+      </div>
     </div>
     <div class="theme-row" id="theme-row">
       <span class="theme-label">Theme</span>
@@ -306,7 +313,7 @@
       <p>Tap Edit above and choose up to 10 trending apps for 2026 to build your showcase.</p>
     </div>
   </div>
-
+ 
   <!-- PICKER / EDIT -->
   <div class="screen top-align" id="screen-picker">
     <div class="picker-topbar">
@@ -322,19 +329,19 @@
       <button class="btn btn-primary" id="save-selection-btn">Save selection</button>
     </div>
   </div>
-
+ 
   <div class="toast" id="toast"></div>
 </div>
-
+ 
 <script>
 (function(){
   "use strict";
-
+ 
   // ---------- state ----------
   let profileName = "Guest";
   let selectedNames = [];
   const MAX_PICK = 10;
-
+ 
   // ---------- 20 trending apps for 2026 (stylized generic icons — not exact brand logos) ----------
   const APPS_ALL = [
     { name:"Instagram", url:"https://www.instagram.com", grad:["#f9a34c","#e94584","#7c3aed"], glow:"rgba(233,69,132,0.45)",
@@ -378,7 +385,7 @@
     { name:"BeReal", url:"https://bere.al", grad:["#000","#333"], glow:"rgba(255,255,255,0.25)",
       icon:`<rect x="6" y="14" width="20" height="20" rx="4" fill="none" stroke="#fff" stroke-width="3"/><rect x="24" y="20" width="18" height="18" rx="4" fill="#000" stroke="#fff" stroke-width="3"/>` },
   ];
-
+ 
   // ---------- helpers ----------
   function $(id){ return document.getElementById(id); }
   function showScreen(id){
@@ -392,22 +399,16 @@
     t.classList.add("show");
     setTimeout(()=> t.classList.remove("show"), 2200);
   }
-  function genCode(){
-    const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-    let c = "";
-    for(let i=0;i<8;i++) c += chars[Math.floor(Math.random()*chars.length)];
-    return c;
+  function b64urlEncode(str){
+    return btoa(unescape(encodeURIComponent(str))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
   }
-  async function storageSet(key, value){
-    try{ return await window.storage.set(key, value, true); }
-    catch(e){ console.error("storage set failed", e); return null; }
-  }
-  async function storageGet(key){
-    try{ return await window.storage.get(key, true); }
-    catch(e){ return null; }
+  function b64urlDecode(str){
+    str = str.replace(/-/g,"+").replace(/_/g,"/");
+    while(str.length % 4) str += "=";
+    return decodeURIComponent(escape(atob(str)));
   }
   function findApp(name){ return APPS_ALL.find(a => a.name === name); }
-
+ 
   // ---------- login ----------
   $("login-btn").addEventListener("click", () => {
     const u = $("login-user").value.trim();
@@ -427,7 +428,7 @@
   ["login-user","login-pass"].forEach(id=>{
     $(id).addEventListener("keydown", e => { if(e.key === "Enter") $("login-btn").click(); });
   });
-
+ 
   // ---------- profile ----------
   $("generate-btn").addEventListener("click", () => {
     const name = $("profile-name").value.trim();
@@ -446,17 +447,17 @@
     selectedNames = APPS_ALL.slice(0, MAX_PICK).map(a => a.name); // sensible default
     openPicker(true);
   });
-
+ 
   // ---------- picker (edit) ----------
   const pickerGrid = $("picker-grid");
   let cameFromProfile = false;
-
+ 
   function openPicker(fromProfile){
     cameFromProfile = !!fromProfile;
     renderPicker();
     showScreen("screen-picker");
   }
-
+ 
   function renderPicker(){
     pickerGrid.innerHTML = "";
     APPS_ALL.forEach(app => {
@@ -474,7 +475,7 @@
     });
     updateCounter();
   }
-
+ 
   function toggleSelect(name, el){
     const idx = selectedNames.indexOf(name);
     if(idx > -1){
@@ -490,50 +491,52 @@
     }
     updateCounter();
   }
-
+ 
   function updateCounter(){
     $("picker-counter").textContent = selectedNames.length + " / " + MAX_PICK;
   }
-
+ 
   $("picker-back-btn").addEventListener("click", () => {
     if(cameFromProfile){ showScreen("screen-profile"); }
     else{ renderStore(); showScreen("screen-home"); }
   });
-
-  let currentShareCode = null;
-
-  $("save-selection-btn").addEventListener("click", async () => {
+ 
+  function buildShareUrl(){
+    const payload = JSON.stringify({ n: profileName, a: selectedNames, t: activeTheme.id });
+    const url = new URL(window.location.href);
+    url.search = "";
+    url.searchParams.set("data", b64urlEncode(payload));
+    return url.toString();
+  }
+ 
+  $("save-selection-btn").addEventListener("click", () => {
     if(selectedNames.length === 0){
       toast("Pick at least 1 app to continue");
       return;
     }
     if(cameFromProfile){
-      const code = genCode();
-      currentShareCode = code;
-      await storageSet("profile:" + code, JSON.stringify({ name: profileName, apps: selectedNames, theme: activeTheme.id }));
-      const url = new URL(window.location.href);
-      url.searchParams.set("code", code);
-      $("share-link").value = url.toString();
+      $("share-link").value = buildShareUrl();
       showScreen("screen-generate");
     } else {
       renderStore();
       showScreen("screen-home");
-      toast("Selection updated");
-      if(currentShareCode){
-        storageSet("profile:" + currentShareCode, JSON.stringify({ name: profileName, apps: selectedNames, theme: activeTheme.id }));
-      }
+      toast("Selection updated — tap Edit again or check the note to re-share your link");
     }
   });
-
+ 
   $("edit-btn").addEventListener("click", () => openPicker(false));
-
+  $("share-again-btn").addEventListener("click", () => {
+    $("share-link").value = buildShareUrl();
+    showScreen("screen-generate");
+  });
+ 
   $("copy-link-btn").addEventListener("click", () => {
     $("share-link").select();
     navigator.clipboard?.writeText($("share-link").value).then(()=> toast("Link copied"))
       .catch(()=> toast("Select the text and copy manually"));
   });
   $("continue-btn").addEventListener("click", () => { renderStore(); showScreen("screen-home"); });
-
+ 
   // ---------- pro themes: each pairs a color palette with its own 3D transition ----------
   const THEMES = [
     { id:"nebula",   name:"Nebula",   swatch:"linear-gradient(135deg,#7c5cfc,#26d3b0)", anim:"zoom",  tag:"Zoom Blur" },
@@ -543,7 +546,7 @@
     { id:"chrome",   name:"Chrome",   swatch:"linear-gradient(135deg,#94a3b8,#38bdf8)", anim:"orbit", tag:"Orbit Spin" },
   ];
   let activeTheme = THEMES[0];
-
+ 
   function buildThemeRow(){
     const row = $("theme-row");
     row.querySelectorAll(".theme-swatch").forEach(el => el.remove());
@@ -559,22 +562,19 @@
         row.querySelectorAll(".theme-swatch").forEach(s => s.classList.remove("active"));
         el.classList.add("active");
         toast(t.name + " theme · " + t.tag);
-        if(currentShareCode){
-          storageSet("profile:" + currentShareCode, JSON.stringify({ name: profileName, apps: selectedNames, theme: t.id }));
-        }
       });
       row.appendChild(el);
     });
   }
-
+ 
   // ---------- spotlight (click to open, scroll/swipe to zoom-cycle) ----------
   let spotlightIndex = 0;
   let spotlightBusy = false;
-
+ 
   function currentSpotlightApps(){
     return selectedNames.map(findApp).filter(Boolean);
   }
-
+ 
   function renderSpotlight(){
     const apps = currentSpotlightApps();
     const wrap = $("spotlight-wrap");
@@ -587,7 +587,7 @@
     paintSpotlight(apps[spotlightIndex]);
     renderDots(apps);
   }
-
+ 
   function paintSpotlight(app){
     const iconEl = $("spotlight-icon");
     iconEl.style.background = `linear-gradient(135deg, ${app.grad[0]}, ${app.grad[app.grad.length-1]})`;
@@ -595,7 +595,7 @@
     iconEl.style.boxShadow = `0 30px 70px ${app.glow}`;
     $("spotlight-name").textContent = app.name;
   }
-
+ 
   function renderDots(apps){
     const dotsEl = $("spotlight-dots");
     dotsEl.innerHTML = "";
@@ -605,7 +605,7 @@
       dotsEl.appendChild(d);
     });
   }
-
+ 
   function spotlightCycle(dir){
     const apps = currentSpotlightApps();
     if(apps.length < 2 || spotlightBusy) return;
@@ -615,10 +615,10 @@
     const anim = activeTheme.anim; // zoom | cube | flip | slide | orbit
     const outClass = anim + "-out";
     const inClass = anim + "-in-start";
-
+ 
     iconEl.classList.add(outClass);
     nameEl.style.opacity = 0;
-
+ 
     setTimeout(() => {
       spotlightIndex = (spotlightIndex + dir + apps.length) % apps.length;
       const app = apps[spotlightIndex];
@@ -633,7 +633,7 @@
       setTimeout(() => { spotlightBusy = false; }, 340);
     }, 260);
   }
-
+ 
   const spotlightStage = $("spotlight-stage");
   spotlightStage.addEventListener("click", () => {
     const apps = currentSpotlightApps();
@@ -642,7 +642,7 @@
     window.open(app.url, "_blank", "noopener,noreferrer");
     toast("Opening " + app.name + " …");
   });
-
+ 
   let spotlightWheelLock = false;
   spotlightStage.addEventListener("wheel", (e) => {
     e.preventDefault();
@@ -651,7 +651,7 @@
     spotlightCycle(e.deltaY > 0 ? 1 : -1);
     setTimeout(()=> spotlightWheelLock = false, 320);
   }, { passive:false });
-
+ 
   let spotlightTouchX = null;
   spotlightStage.addEventListener("touchstart", (e) => { spotlightTouchX = e.touches[0].clientX; }, { passive:true });
   spotlightStage.addEventListener("touchend", (e) => {
@@ -660,7 +660,7 @@
     if(Math.abs(dx) > 40) spotlightCycle(dx < 0 ? 1 : -1);
     spotlightTouchX = null;
   }, { passive:true });
-
+ 
   // ---------- app store home ----------
   function renderStore(){
     $("home-title").textContent = profileName;
@@ -672,7 +672,7 @@
     $("empty-state").style.display = apps.length ? "none" : "block";
     $("spotlight-wrap").style.display = apps.length ? "flex" : "none";
   }
-
+ 
   // ---------- entry ----------
   function enterHome(name, apps, themeId){
     profileName = name || "Guest";
@@ -681,27 +681,26 @@
     renderStore();
     showScreen("screen-home");
   }
-
-  async function init(){
+ 
+  function init(){
     const params = new URLSearchParams(window.location.search);
-    const code = params.get("code");
-    if(code){
-      const rec = await storageGet("profile:" + code.toUpperCase());
-      if(rec && rec.value){
-        try{
-          const data = JSON.parse(rec.value);
-          currentShareCode = code.toUpperCase();
-          enterHome(data.name, data.apps, data.theme);
-          return;
-        }catch(e){}
+    const raw = params.get("data");
+    if(raw){
+      try{
+        const json = b64urlDecode(raw);
+        const data = JSON.parse(json);
+        enterHome(data.n, data.a, data.t);
+        return;
+      }catch(e){
+        toast("This link's data looks corrupted — sign in to create a new one");
       }
-      toast("This link's data couldn't be found — sign in to create a new one");
     }
     showScreen("screen-login");
   }
-
+ 
   init();
 })();
 </script>
 </body>
 </html>
+ 
